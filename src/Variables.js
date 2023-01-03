@@ -1,5 +1,4 @@
 export const variables = {
-    API_URL:"https://localhost:7087/api/",
-    AUTH:"https://localhost:7087/api/Auth/"
+    API_URL:process.env.REACT_APP_API_URL,
+    AUTH:process.env.REACT_APP_AUTH
 }
-const Token = "";

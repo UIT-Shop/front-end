@@ -1,18 +1,20 @@
-
-.small-container{
+.small-container {
     max-width: 1080px;
     margin: auto;
     padding-left: 25px;
     padding-right: 25px;
+    margin-top: 100px;
 }
-.title{
+
+.title {
     text-align: center;
     margin: 80px auto;
     position: relative;
     line-height: 60px;
-    color:#555;
+    color: #555;
 }
-h4{
+
+h4 {
     color: #555;
     font-weight: normal;
 }

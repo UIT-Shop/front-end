@@ -3,8 +3,8 @@ import './Intro.css'
 const Intro = () => {
     return (
         <>
-            <div className="container-2">
-                <div className="row">
+            <div className="container-2 w-100">
+                <div className="row w-100">
                     <div className="col-2 left">
                         <h1>Give your workout <br />a new style</h1>
                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab, sit cupiditate? Sapie!</p>

@@ -1,41 +1,54 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-a{
+
+.form-check-input {
+  height: 20x
+}
+
+a {
   text-decoration: none;
   color: #555;
 }
-button{
+
+button {
   border: none;
 }
-button:hover{
+
+button:hover {
   cursor: pointer;
 }
-.row{
+
+.row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   justify-content: space-around;
 }
-.col-2{
+
+.col-2 {
   flex-basis: 50%;
   min-width: 300px;
 }
-.row .left{
+
+.row .left {
   padding-left: 50px;
 }
-.col-2 img{
+
+.col-2 img {
   max-width: 100%;
   padding: 50px 0;
 }
-.col-2 h1{
+
+.col-2 h1 {
   font-size: 50px;
   line-height: 60px;
   margin: 25px 0;
 }
-.btn{
+
+/* .btn{
   display: inline-block;
   background: #ff523b; 
   color: white;
@@ -46,44 +59,53 @@ button:hover{
 }
 .btn:hover{
   background: #563434;
-}
-.col-4{
-  flex-basis:25%;
+} */
+.col-4 {
+  flex-basis: 25%;
   padding: 10px;
   min-width: 200px;
   margin-bottom: 50px;
   transition: transform 0.5s;
 }
-.col-4 img{
+
+.col-4 img {
   width: 100%;
 }
-.col-4 p{
+
+.col-4 p {
   font-size: 14px;
 }
-.rating .fa{
+
+.rating .fa {
   color: #ff523b;
 }
-.col-4:hover{
+
+.col-4:hover {
   transform: translateY(-5px);
   cursor: pointer;
 }
+
 /*Product*/
-.row-2{
+.row-2 {
   justify-content: space-between;
   margin: 100px auto 50px;
 }
-select{
+
+select {
   border: 1px solid #ff523b;
   padding: 5px;
 }
-select:focus{
-  outline:none;
+
+select:focus {
+  outline: none;
 }
-.page-btn{
+
+.page-btn {
   margin: 0 auto 80px;
 }
-.page-btn span{
-  display:inline-block;
+
+.page-btn span {
+  display: inline-block;
   border: 1px solid #ff523b;
   margin-left: 10px;
   width: 40px;
@@ -92,66 +114,102 @@ select:focus{
   line-height: 40px;
   cursor: pointer;
 }
-.page-btn span:hover{
+
+.page-btn span:hover {
   background: #ff523b;
   color: #fff;
 }
+
 /*Detail product*/
-.single-product{
+.carousel .carousel-indicators li {
+  background-color: red;
+}
+
+.carousel .carousel-indicators li.active {
+  background-color: blue;
+}
+
+
+.carousel-item {
+  overflow-anchor: none;
+}
+
+.single-product {
   margin-top: 80px;
 }
-.single-product .col-2 img{
+
+.single-product .col-2 img {
   padding: 0;
 }
-.single-product .col-2{
+
+.single-product .col-2 {
   padding: 20px;
 }
-.single-product h4{
-  margin: 20px 0;
+
+.single-product h5 {
+  padding-top: 10px
+}
+
+.single-product h4 {
+  margin: 10px 0;
   font-size: 22px;
-  font-weight:bold;
+  height: 50px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /* number of lines to show */
+  -webkit-box-orient: vertical;
 }
-.single-product select{
+
+.single-product select {
   display: block;
-  padding: 10px;
-  margin-top:20px;
 }
-.single-product input{
+
+/* .single-product input {
   width: 50px;
   height: 40px;
   padding-left: 10px;
-  font-size:20px;
+  font-size: 20px;
   margin-right: 10px;
   border: 1px solid #ff523b;
-}
-input:focus{
+} */
+
+input:focus {
   outline: none;
 }
-.single-product .fa{
+
+.single-product .fa {
   color: #ff523b;
 }
-.small-img-row{ 
+
+.small-img-row {
   display: flex;
   justify-content: space-between;
 }
-.small-img-col{
+
+.small-img-col {
   flex-basis: 24%;
   cursor: pointer;
 }
 
 /*Cart item*/
-.cart-page{
+.cart-page {
   margin: 80px auto;
 }
-table{
+
+table {
   width: 100%;
   border-collapse: collapse;
 }
-.cart-info{
+
+.cart-info {
   display: flex;
   flex-wrap: wrap;
 }
-th{
+
+th {
   text-align: left;
   padding: 5px;
   color: #fff;
@@ -159,45 +217,54 @@ th{
   font-weight: normal;
 }
 
-td{
+td {
   padding: 10px 5px;
 }
-td input{
+
+/* 
+td input {
   width: 40px;
   height: 30px;
   padding: 5px;
-}
-td button{
+} */
+
+td button {
   color: #ff523b;
   font-size: 12px;
 }
-td img{
+
+td img {
   width: 80px;
   height: 80px;
   margin-right: 10px;
 }
-.total-price{
+
+.total-price {
   display: flex;
   justify-content: flex-end;
 }
-.total-price table{
+
+.total-price table {
   border-top: 3px solid #ff523b;
   width: 100%;
   max-width: 350px;
 }
-td:last-child{
+
+td:last-child {
   text-align: right;
 }
-th:last-child{
+
+th:last-child {
   text-align: right;
 }
 
 /* Account page*/
-.account-page{
+.account-page {
   padding: 50px 0;
-  background: radial-gradient(#fff,#ffd6d6);
+  background: radial-gradient(#fff, #ffd6d6);
 }
-.form-container{
+
+.form-container {
   left: 130px;
   background: #fff;
   width: 300px;
@@ -205,10 +272,11 @@ th:last-child{
   position: relative;
   text-align: center;
   padding: 20px 0;
-  box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+  box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
-.form-container span{
+
+.form-container span {
   font-weight: bold;
   padding: 0 10px;
   color: #555;
@@ -216,42 +284,42 @@ th:last-child{
   width: 100px;
   display: inline-block;
 }
-.form-btn{
+
+.form-btn {
   display: inline-block;
 }
-.form-container form{
+
+.form-container form {
   max-width: 300px;
   padding: 0 20px;
   position: absolute;
   top: 130px;
   transition: transform 1s;
 }
-form input{
+
+form input {
   width: 100%;
   height: 30px;
   margin: 10px 0px;
   padding: 0 10px;
   border: 1px solid #ccc;
 }
-form .btn{
-  width: 100%;
-  border: none;
-  cursor: pointer;
-  margin: 10px 0;
-}
-form .btn:focus{
-  outline: none
-}
-#LoginForm{
+
+
+
+#LoginForm {
   left: -300px;
 }
-#RegisterForm{
+
+#RegisterForm {
   left: 0;
 }
-form a{
+
+form a {
   font-size: 12px;
 }
-#Indicator{
+
+#Indicator {
   width: 100px;
   border: none;
   background: #ff523b;
@@ -265,24 +333,31 @@ form a{
 
 
 
-@media only screen and (max-width: 600px){
-  .row{
+@media only screen and (max-width: 600px) {
+  .row {
     text-align: center;
   }
-  .col-2, .col-3, .col-4{
+
+  .col-2,
+  .col-3,
+  .col-4 {
     flex-basis: 100%;
   }
-  .single-product .row{
+
+  .single-product .row {
     text-align: left;
   }
-  .single-product .col-2{
+
+  .single-product .col-2 {
     padding: 20px 0;
   }
-  .single-product h1{
+
+  .single-product h1 {
     font-size: 26px;
     line-height: 32px;
   }
-  .cart-info p{
+
+  .cart-info p {
     display: none;
   }
 }
