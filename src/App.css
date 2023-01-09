@@ -329,6 +329,10 @@ form a {
   transition: transform 1s;
 }
 
+#sign-up {
+  display: none;
+}
+
 
 
 

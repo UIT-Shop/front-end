@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import logo from "../assets/images/logo.svg"
 import { Link } from "react-router-dom"
 import './NavBar.css'
 import axious from "axios"
@@ -27,14 +26,17 @@ const NavBar = () => {
             )
         })
     }
+    const logOut = (e) => {
+
+        localStorage.removeItem('JWT')
+        window.location.reload()
+
+    }
     const FetchCategory = () => {
         const url = variables.API_URL + "Category"
         axious.get(url).then((result) => {
-            console.log(result.data)
             setCategories(result.data)
         }).catch((error) => {
-            alert(error)
-            console.log(error);
         })
     }
 
@@ -43,10 +45,6 @@ const NavBar = () => {
 
     useEffect(() => {
         if (localStorage.getItem("JWT") != null) {
-            var Json = parseJwt(localStorage.getItem("JWT"))
-            console.log(Json)
-            FetchUser(Json["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"])
-            console.log(json["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"])
             setAuth(true)
         }
         FetchCategory()
@@ -76,9 +74,6 @@ const NavBar = () => {
                             <li className="nav-item">
                                 <Link to="/product" state={categories}><a className="nav-link" href="#">Nữ</a></Link>
                             </li>
-                            <li className="nav-item">
-                                <Link to="/"><a className="nav-link" href="#">Features</a></Link>
-                            </li>
                             {/* <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                                 <div className="dropdown-menu">
@@ -91,32 +86,32 @@ const NavBar = () => {
                             </li> */}
                         </ul>
 
-                        <ul className="navbar-nav mr-5">
 
-                            {Authenticated ?
+
+                        {Authenticated ?
+                            <ul className="navbar-nav mr-5">
                                 <li class="dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x">
-
-                                    </i></a>
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x"></i></a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">Information</a>
-                                        <Link to="/Order"><a class="dropdown-item" href="#">Orders</a></Link>
-
+                                        <Link to="/UserInformation"><a class="dropdown-item" href="#">Thông tin người dùng</a></Link>
+                                        <Link to="/Order"><a class="dropdown-item" href="#">Đơn đặt hàng</a></Link>
+                                        <button class="btn" onClick={(e) => logOut(e)}>Đăng xuất</button>
                                     </div>
                                 </li>
-                                :
+                                <li><span style={{ paddingLeft: "20px" }}></span></li>
+                                <li ><Link className='nav-link' to="/Cart"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></Link></li>
+                                <li><span style={{ paddingRight: "100px" }}></span></li>
+                            </ul>
+
+                            :
+                            <ul className="navbar-nav mr-5">
                                 <li className='container d-flex align-items-center justify-content-center'>
 
-                                    <Link to="/Account"> <button type="button" class="btn btn-light align-middle">Login</button></Link>
+                                    <Link to="/Account"> <button type="button" class="btn btn-light align-middle">Đăng nhập</button></Link>
                                 </li>
-                            }
+                            </ul>
+                        }
 
-                            <li><span style={{ paddingLeft: "20px" }}></span></li>
-                            <li ><Link className='nav-link' to="/Cart"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i></Link></li>
-                            <li><span style={{ paddingRight: "100px" }}></span></li>
-
-                            <li></li>
-                        </ul>
 
 
                     </div>

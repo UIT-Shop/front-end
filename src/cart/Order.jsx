@@ -6,7 +6,7 @@ import { ColorRing } from 'react-loader-spinner'
 import { Link } from "react-router-dom"
 import axious from "axios"
 import { useEffect } from 'react'
-
+import Moment from 'moment';
 
 const Order = () => {
     const [isShow, invokeModal] = React.useState(false)
@@ -30,16 +30,25 @@ const Order = () => {
         forceUpdate()
         const url = variables.API_URL + `Order`
         axious.get(url).then((result) => {
-            console.log(result)
             setProducts(result.data.data)
         }).catch((error) => {
-            alert(error)
-            console.log(error);
+            // alert(error)
         })
     }
 
-    const detailClick = () => {
-
+    const getStatus = (status) => {
+        switch (status) {
+            case 0:
+                return "Đang chờ"
+            case 1:
+                return "Đã nhận đơn"
+            case 2:
+                return "Đang vận chuyển"
+            case 3:
+                return "Đã giao"
+            default:
+                return "Đơn bị hủy"
+        }
     }
 
     return (
@@ -62,9 +71,10 @@ const Order = () => {
                 <table class="table table-hover mt-5 mb-5">
                     <thead>
                         <tr className='table-dark mt-5'>
-                            <th scope="col">Date</th>
-                            <th scope="col">Total price</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Mã Đơn hàng</th>
+                            <th scope="col">Thời gian</th>
+                            <th scope="col">Tổng số tiền</th>
+                            <th scope="col">Tình trạng</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -72,9 +82,10 @@ const Order = () => {
                         {
                             products.map((product, i) =>
                                 <tr>
-                                    <td className='align-middle'>{new Date(product.orderDate).toLocaleString()}</td>
+                                    <td className='align-middle'>{product.id}</td>
+                                    <td className='align-middle'>{Moment(product.orderDate).format('HH:mm:ss - DD/MM/yyyy')}</td>
                                     <td className='align-middle'>{(product.totalPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
-                                    <td className='align-middle'>{product.status == 0 ? "Not delivered yet" : "Delivered"}</td>
+                                    <td className='align-middle'>{getStatus(product.status)}</td>
                                     <td className='align-middle'><Link to={"/Order/" + product.id} state={product} ><button type="button" class="btn btn-primary" onClick={(e) => { }}>Detail</button></Link></td>
                                 </tr>
                             )

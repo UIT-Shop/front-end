@@ -16,6 +16,7 @@ import axios from "axios"
 import Order from './cart/Order';
 import OrderDetail from './cart/OrderDetail';
 import { variables } from './Variables';
+import UserInformation from './cart/UserInformation';
 
 
 
@@ -52,6 +53,7 @@ function App() {
           <Route path='/Cart' element={<Cart />}></Route>
           <Route path='/Order' element={<Order />}></Route>
           <Route path='/Order/:id' element={<OrderDetail />}></Route>
+          <Route path='/UserInformation' element={<UserInformation />}></Route>
         </Routes>
       </Router>
       <Footer />

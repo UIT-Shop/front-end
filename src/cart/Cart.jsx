@@ -14,6 +14,7 @@ const Cart = () => {
     const [products, setProducts] = useState([])
     const totalPrice = useRef(0)
     const isLoading = useRef(true)
+    const productLoaded = useRef(false)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
     useEffect(() => {
@@ -21,7 +22,7 @@ const Cart = () => {
         getVariants()
 
         // data = categories['data']
-        // console.log(data)
+
 
     }, [])
 
@@ -30,43 +31,40 @@ const Cart = () => {
         forceUpdate()
         const url = variables.API_URL + `Cart`
         axious.get(url).then((result) => {
-            console.log(result)
+            productLoaded.current = true
             setProducts(result.data.data)
         }).catch((error) => {
-            alert(error)
-            console.log(error);
+
         })
     }
     useEffect(() => {
-        if (products.length !== 0) {
-            isLoading.current = false
+        if (productLoaded.current) {
+
             totalPrice.current = 0
             products.forEach((product, i) => {
                 totalPrice.current = totalPrice.current + (product.price * product.quantity)
             })
-            console.log(totalPrice)
-            console.log(products)
+            isLoading.current = false
             forceUpdate()
         }
 
 
+
+
         // data = categories['data']
-        // console.log(data)
+
 
     }, [products])
 
     const changeQuantity = async (variantID, quantity) => {
 
-        console.log(quantity)
-        console.log(variantID + "quantity" + quantity)
+
         isLoading.current = true
         forceUpdate()
         const url = variables.API_URL + `Cart/update-quantity`
         axious.put(url, { productVariantId: variantID, quantity: quantity }).then((result) => {
             getVariants()
         }).catch((error) => {
-            alert(error)
-            console.log(error);
         })
     }
 
@@ -75,8 +73,6 @@ const Cart = () => {
         axious.delete(url).then((result) => {
             getVariants()
         }).catch((error) => {
-            alert(error)
-            console.log(error);
         })
     }
 
@@ -100,12 +96,12 @@ const Cart = () => {
                 <table class="table table-hover mt-5">
                     <thead>
                         <tr className='table-dark'>
-                            <th scope="col">Product</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Subtotal</th>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Màu sắc</th>
+                            <th scope="col">Kích thước</th>
+                            <th scope="col">Giá thành</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Tổng cộng</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -132,15 +128,30 @@ const Cart = () => {
                                 </tr>
                             )
                         }
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td className='align-middle'>Total: {totalPrice.current.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
-                            <td className='align-middle'><Link to="/Information"><button type="button" class="btn btn-primary">Next</button> </Link></td>
-                        </tr>
+                        {
+                            products.length == 0 ?
+                                <tr>
+                                    <td>Hiện tại không có sản phẩm trong giỏ hàng</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                :
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td className='align-middle'> <h5 className='mt-5'>Phí ship: Miễn phí</h5>Total: {totalPrice.current.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
+                                    <td className='align-middle'><Link to="/Information" state={totalPrice.current}><button type="button" class="btn btn-primary">Next</button> </Link></td>
+                                </tr>
+                        }
+
                     </tbody>
                 </table>
 

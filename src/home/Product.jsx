@@ -25,7 +25,6 @@ const Product = () => {
     const location = useLocation()
     let productsArray = {};
     let productStuff = [];
-    console.log(location)
     const pageComponent = () => {
         if (pageNumber.current < 5) {
             return <Pagination>
@@ -113,8 +112,6 @@ const Product = () => {
         window.scrollTo(0, 0)
         if (location.state != null) {
             data.current = location.state.data
-            console.log(data.current)
-            console.log(location.pathname)
             category.current = data.current.find(d => d.type === 'ÁO' && d.gender === 'Nam')
             var ShirtData = data.current.filter(d => d.type === 'ÁO' && d.gender === 'Nam')
             setShirtData(ShirtData)
@@ -122,18 +119,15 @@ const Product = () => {
             setPantData(PantData)
 
             // data = categories['data']
-            // console.log(data)
         }
     }, [])
     useEffect(() => {
-        console.log(products)
         isLoading.current = false
-        console.log(productsArray)
+        console.log(products)
         forceUpdate()
 
     }, [products])
     useEffect(() => {
-        console.log(category.current)
         clickCategory(category.current)
 
     }, [shirtData])
@@ -149,30 +143,22 @@ const Product = () => {
         const url = variables.API_URL + `Product/Category/${categoryID}?page=${page}`
         axious.get(url).then((result) => {
             productsArray = result.data['data'].products.filter(d => d.images.length > 0 && d.variants.length > 0)
-            console.log("data", result.data.data)
-            console.log("product Array", productsArray)
             // var parsedData = productsArray.map(el => 
             //     el.images = el.images.filter(x => x.colorId != null))
             // parsedData = parsedData.filter(d => d.images.length > 0 )
-            // console.log(parsedData)
-            console.log(result.data)
             setPage(page)
             setProducts(productsArray)
             pageNumber.current = result.data.data.pages
 
-            console.log(pageNumber.current)
-            console.log(category.current)
 
         }).catch((error) => {
             alert(error)
-            console.log(error);
             isLoading.current = false
         })
     }
     const clickCategory = (category) => {
         const listElement = document.getElementsByClassName("categories-button")
         if (listElement.length > 0) {
-            console.log(listElement)
             var element = document.getElementById(category['id']);
 
             if (!element.classList.contains('clicked')) {
@@ -181,7 +167,6 @@ const Product = () => {
                         Element.classList.remove("clicked")
                         Element.style.backgroundColor = "transparent"
                         Element.style.color = "#000"
-                        console.log(Element)
                     }
                 });
                 element.classList.add("clicked")

@@ -34,15 +34,12 @@ const OrderDetail = () => {
     }
     useEffect(() => {
         if (location.state != null) {
-            console.log(location.state)
             FetchOrder(location.state.id)
             window.scrollTo(0, 0)
-            // console.log(data)
         }
     }, [])
     useEffect(() => {
         if (products.initialized != false) {
-            console.log(products)
             isLoading.current = false
             forceUpdate()
         }
@@ -62,11 +59,10 @@ const OrderDetail = () => {
                 progress: undefined,
                 theme: 'colored',
             });
+
             initModal()
-            console.log("success")
         }).catch((error) => {
             alert(error)
-            console.log(error);
         })
     }
 
@@ -77,11 +73,9 @@ const OrderDetail = () => {
         const url = variables.API_URL + `Order/${orderID}`
         axious.get(url).then((result) => {
             setProducts(result.data.data)
-            console.log(result.data.data)
 
         }).catch((error) => {
             alert(error)
-            console.log(error);
             isLoading.current = true
             forceUpdate()
         })
@@ -107,11 +101,11 @@ const OrderDetail = () => {
                     <ToastContainer />
                     <thead>
                         <tr className='table-dark mt-5'>
-                            <th scope="col">Products</th>
-                            <th scope="col">Color</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
+                            <th scope="col">Sản phẩm</th>
+                            <th scope="col">Màu</th>
+                            <th scope="col">Kích thước</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Giá thành</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -134,23 +128,23 @@ const OrderDetail = () => {
                                     <td className='align-middle'>{product.quantity}</td>
                                     <td className='align-middle'>{(product.totalPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                                     <td className='align-middle'> <Button variant="primary" onClick={initModal} disabled={products.status !== 3}>
-                                        Comment
+                                        Đánh giá
                                     </Button>
                                         <Modal show={isShow}>
                                             <Modal.Header closeButton onClick={initModal}>
-                                                <Modal.Title>Rating</Modal.Title>
+                                                <Modal.Title>Đánh giá</Modal.Title>
                                             </Modal.Header>
                                             <Modal.Body>
                                                 <Rating style={{ maxWidth: 250 }} value={rating} onChange={(value) => changeRating(value)} />
-                                                <div>Comment</div>
+                                                <div className='pt-2'>Nhận xét của bạn</div>
                                                 <textarea class="form-control border-1" value={comment} onChange={(e) => setComment(e.target.value)} spellcheck="false"></textarea>
                                             </Modal.Body>
                                             <Modal.Footer>
                                                 <Button variant="danger" onClick={initModal}>
-                                                    Close
+                                                    Đóng cửa sổ
                                                 </Button>
-                                                <Button variant="primary" onClick={() => RateProduct(product.productId)}>
-                                                    Rate this product
+                                                <Button variant="primary" onClick={() => RateProduct(product.productVariantID)}>
+                                                    Đánh giá
                                                 </Button>
                                             </Modal.Footer>
                                         </Modal></td>
