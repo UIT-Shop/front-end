@@ -1,8 +1,8 @@
 import React from 'react'
-import Navbar from '../common/header/NavBar'
+import Navbar from '../../common/header/NavBar'
 import { useRef, useReducer } from 'react'
 import { useEffect, useState } from 'react';
-import { variables } from '../Variables'
+import { variables } from '../../Variables'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import axious from "axios"
 import { ToastContainer, toast } from 'react-toastify';

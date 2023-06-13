@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import './RecommendProduct.css'
+import './RecommendProduct.module.css'
 import { Link, useLocation } from "react-router-dom"
 import { useRef, useReducer } from 'react'
-import { variables } from '../Variables'
+import { variables } from '../../Variables.js'
 import axious from "axios"
 import { ColorRing } from 'react-loader-spinner'
 
-const HomeProduct = () => {
+const RecommendProduct = () => {
+
     const [products, setProducts] = useState([])
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const isLoading = useRef(false)
@@ -15,20 +16,16 @@ const HomeProduct = () => {
         forceUpdate()
 
         let productsArray = {};
-        const url = variables.API_URL + `Product?page=1`
+        const url = variables.API_URL + `Product/recommend`
         axious.get(url).then((result) => {
-            console.log(result)
             productsArray = result.data['data'].filter(d => d.images.length > 0 && d.variants.length > 0)
             // var parsedData = productsArray.map(el => 
             //     el.images = el.images.filter(x => x.colorId != null))
             // parsedData = parsedData.filter(d => d.images.length > 0 )
-            // console.log(parsedData)
-            console.log(result.data)
             setProducts(productsArray)
+
         }).catch((error) => {
-            console.log(error);
             isLoading.current = false
-            forceUpdate()
         })
     }
     useEffect(() => {
@@ -39,12 +36,11 @@ const HomeProduct = () => {
     }, [])
     useEffect(() => {
         isLoading.current = false
+        console.log("Recommended", products)
         forceUpdate()
     }, [products])
     const getImgURL = (images) => {
-        console.log(images)
         var newList = images.filter(d => d.colorId !== null)
-        console.log(newList[0])
         return newList[0].url
     }
     return (
@@ -66,7 +62,11 @@ const HomeProduct = () => {
 
                 :
                 <div className="small-container">
-                    <h2>Our products</h2>
+                    {
+                        localStorage.getItem("JWT") != null ?
+                            <h2 className='pt-5'>Recommendation</h2>
+                            : <div></div>
+                    }
                     <div className="row">
                         {
                             products.map((product) =>
@@ -92,7 +92,7 @@ const HomeProduct = () => {
                                             </Link>
 
                                             <a href="" class="text-reset">
-                                                <p>test</p>
+                                                <p>Áo thun</p>
                                             </a>
                                             <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
                                         </div>
@@ -123,4 +123,4 @@ const HomeProduct = () => {
     )
 }
 
-export default HomeProduct
+export default RecommendProduct

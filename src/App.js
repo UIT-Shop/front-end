@@ -1,24 +1,46 @@
 import './App.css';
-import Navbar from './common/header/NavBar'
-import Footer from './common/footer/Footer';
-import Home from './home/Home'
-import Product from './home/Product'
-import Account from './cart/Account'
-import Cart from './cart/Cart'
-import Detail from './home/Detail'
-import Information from './cart/Information';
+
+import Home from './routes/Home'
+import Product from './routes/Product'
+import Account from './routes/Account'
+import Cart from './routes/Cart'
+import Detail from './routes/Detail'
+import UserInformation from './routes/UserInformation';
+import Order from './routes/Order';
+import Information from './components/cart/Information';
+import OrderDetail from './components/order/OrderDetail';
+import RootLayout from './routes/RootLayout';
+
 import { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes, Route
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import axios from "axios"
-import Order from './cart/Order';
-import OrderDetail from './cart/OrderDetail';
+
+
 import { variables } from './Variables';
-import UserInformation from './cart/UserInformation';
 
 
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <RootLayout />,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+        // loader: postsLoader,
+        // children: [
+        //   { path: '/create-post', element: <NewPost />, action: newPostAction },
+        //   { path: '/:postId', element: <PostDetails />, loader: postDetailsLoader }
+        // ],
+      },
+      {
+        path: "*",
+        element: <p>There's nothing here: 404!</p>,
+      },
+    ],
+  },
+]);
 
 
 function App() {
@@ -43,7 +65,10 @@ function App() {
   })
   return (
     <>
-      <Router>
+      <RouterProvider router={router} />
+
+
+      {/* <Router>
         <Routes>
           <Route path='/' element={<Home />}></Route>
           <Route path='/Detail' element={<Detail />}></Route>
@@ -56,7 +81,7 @@ function App() {
           <Route path='/UserInformation' element={<UserInformation />}></Route>
         </Routes>
       </Router>
-      <Footer />
+      <Footer /> */}
     </>
   );
 }

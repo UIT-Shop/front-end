@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Navbar from '../common/header/NavBar'
-import './RecommendProduct.css'
 import { Link, useLocation } from "react-router-dom"
 import { useRef, useReducer } from 'react'
 import { ColorRing } from 'react-loader-spinner'
@@ -187,7 +185,6 @@ const Product = () => {
 
     return (
         <>
-            <Navbar />
 
             <div>Man</div>
             <div className='small-container'>

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
-import Navbar from '../common/header/NavBar'
 import axious from "axios"
 import { variables } from '../Variables'
 import { useRef, useReducer } from 'react'
@@ -78,7 +77,6 @@ const Cart = () => {
 
     return (
         <>
-            <Navbar />
             {isLoading.current ?
                 <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
                     <ColorRing

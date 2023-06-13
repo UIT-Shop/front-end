@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../common/header/NavBar'
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useReducer } from 'react'
@@ -251,7 +250,6 @@ const Detail = () => {
 
     return (
         <>
-            <Navbar />
             {isLoading.current ? <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
                 <ColorRing
                     visible={true}

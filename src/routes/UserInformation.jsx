@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../common/header/NavBar'
 import { useRef, useReducer } from 'react'
 import { useEffect, useState } from 'react';
 import { variables } from '../Variables'
@@ -77,7 +76,6 @@ function UserInformation() {
 
     return (
         <>
-            <Navbar />
             <ToastContainer />
             {
                 isLoading.current ? <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>

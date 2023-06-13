@@ -1,5 +1,4 @@
 import React from 'react'
-import NavBar from '../common/header/NavBar'
 import { variables } from '../Variables'
 import { useRef, useReducer, useState } from 'react'
 import { ColorRing } from 'react-loader-spinner'
@@ -53,7 +52,6 @@ const Order = () => {
 
     return (
         <>
-            <NavBar />
             {isLoading.current ?
                 <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
                     <ColorRing

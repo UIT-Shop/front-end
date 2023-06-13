@@ -1,10 +1,9 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import NavBar from '../common/header/NavBar'
 import { ColorRing } from 'react-loader-spinner'
 import { Link, useLocation } from "react-router-dom";
 import { useRef, useReducer } from 'react'
-import { variables } from '../Variables'
+import { variables } from '../../Variables'
 import { Modal, Button } from 'react-bootstrap'
 import { Rating } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
@@ -82,7 +81,6 @@ const OrderDetail = () => {
     }
     return (
         <>
-            <NavBar />
             {isLoading.current ?
                 <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
                     <ColorRing
