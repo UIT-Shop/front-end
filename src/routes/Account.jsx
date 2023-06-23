@@ -30,9 +30,14 @@ const Account = () => {
             password: password,
         }
         axious.post(url, data).then((result) => {
+            if (result.data.data === null)
+                throw result.data.message
             localStorage.setItem("JWT", result.data['data']);
+
             alert("Đăng nhập thành công")
             navigate('/')
+            navigate(0)
+
             axious.defaults.headers.post['Content-Type'] = 'application/json';
             axious.defaults.headers.post['Accept'] = 'application/json';
             axious.interceptors.request.use(function (config) {

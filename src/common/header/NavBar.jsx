@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from "react-router-dom"
-import './NavBar.css'
+import './NavBar.module.css'
 import axious from "axios"
 import { variables } from '../../Variables'
 
@@ -37,6 +37,7 @@ const NavBar = () => {
         axious.get(url).then((result) => {
             setCategories(result.data)
         }).catch((error) => {
+            console.log(error)
         })
     }
 
@@ -69,10 +70,10 @@ const NavBar = () => {
                                 </a>
                             </li> */}
                             <li className="nav-item">
-                                <Link to="/product" state={categories}><a className="nav-link" href="#">Nam</a></Link>
+                                <Link to="/product/Nam" state={categories}><a className="nav-link" href="#">Nam</a></Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/product" state={categories}><a className="nav-link" href="#">Nữ</a></Link>
+                                <Link to="/product/Nữ" state={categories}><a className="nav-link" href="#">Nữ</a></Link>
                             </li>
                             {/* <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -93,7 +94,7 @@ const NavBar = () => {
                                 <li class="dropdown">
                                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-2x"></i></a>
                                     <div class="dropdown-menu">
-                                        <Link to="/UserInformation"><a class="dropdown-item" href="#">Thông tin người dùng</a></Link>
+                                        <Link to="/userinformation"><a class="dropdown-item" href="#">Thông tin người dùng</a></Link>
                                         <Link to="/Order"><a class="dropdown-item" href="#">Đơn đặt hàng</a></Link>
                                         <button class="btn" onClick={(e) => logOut(e)}>Đăng xuất</button>
                                     </div>
@@ -107,7 +108,7 @@ const NavBar = () => {
                             <ul className="navbar-nav mr-5">
                                 <li className='container d-flex align-items-center justify-content-center'>
 
-                                    <Link to="/Account"> <button type="button" class="btn btn-light align-middle">Đăng nhập</button></Link>
+                                    <Link to="/login"> <button type="button" class="btn btn-light align-middle">Đăng nhập</button></Link>
                                 </li>
                             </ul>
                         }

@@ -12,7 +12,7 @@ import OrderDetail from './components/order/OrderDetail';
 import RootLayout from './routes/RootLayout';
 
 import { useEffect, useState } from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, useRouteError } from 'react-router-dom';
 import axios from "axios"
 
 
@@ -28,6 +28,18 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />,
+        // children: [
+        //   {
+        //     path: '/product',
+        //     element: <Product />,
+        //     children: [
+        //       {
+        //         path: '/detail',
+        //         element: <Detail />
+        //       }
+        //     ]
+        //   }
+        // ]
         // loader: postsLoader,
         // children: [
         //   { path: '/create-post', element: <NewPost />, action: newPostAction },
@@ -35,12 +47,54 @@ const router = createBrowserRouter([
         // ],
       },
       {
+        path: '/product/:gender',
+        element: <Product />,
+
+        errorElement: <ErrorBoundary />,
+      },
+      {
+        path: '/product/detail/:id',
+        element: <Detail />,
+      },
+      {
+        path: '/login',
+        element: <Account />,
+      },
+      {
+        path: '/userinformation',
+        element: <UserInformation />,
+      },
+      {
+        path: '/Cart',
+        element: <Cart />
+      },
+      {
+        path: '/Order',
+        element: <Order />
+      },
+      {
+        path: '/Order/:id',
+        element: <OrderDetail />
+      },
+      {
+        path: '/Information',
+        element: <Information />
+      },
+      {
         path: "*",
         element: <p>There's nothing here: 404!</p>,
       },
+
     ],
   },
 ]);
+
+function ErrorBoundary() {
+  let error = useRouteError();
+  console.error(error);
+  // Uncaught ReferenceError: path is not defined
+  return <div>Dang!</div>;
+}
 
 
 function App() {
@@ -62,7 +116,7 @@ function App() {
       }
     })
 
-  })
+  }, [])
   return (
     <>
       <RouterProvider router={router} />

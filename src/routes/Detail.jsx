@@ -222,6 +222,7 @@ const Detail = () => {
             endImg.current = uncolorData.current.length
         currentColor.current = colorData.current[0].colorId
         currentImage.current = colorData.current[0]
+        console.log("color", currentColor.current)
         getQuantity(currentColor.current, optionSize.current)
         forceUpdate()
     }
@@ -345,9 +346,9 @@ const Detail = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="small-container">
+                    <div className="small-container p-4">
                         <div className="row row-2">
-                            <h2>Đánh giá </h2>
+                            <h2>Đánh giá</h2>
                         </div>
                     </div>
 
@@ -364,7 +365,7 @@ const Detail = () => {
                                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
                             />
                         </div> :
-                            <div>
+                            <div className='p-4'>
 
                                 {listRating.current.map((rating) =>
                                     <div>

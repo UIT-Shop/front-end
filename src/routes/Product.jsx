@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import { useRef, useReducer } from 'react'
 import { ColorRing } from 'react-loader-spinner'
 import { variables } from '../Variables'
 import axious from "axios"
 import Pagination from 'react-bootstrap/Pagination';
-
+import { Accordion } from 'react-bootstrap'
+import './Product.css'
+import Card from '../components/common/Card'
+import FilterBar from '../components/product/FilterBar'
 
 
 const Product = () => {
@@ -21,6 +24,10 @@ const Product = () => {
     const pageNumber = useRef(3)
     const [currentPage, setPage] = useState(1)
     const location = useLocation()
+    const dataCate = location.state.data
+    const routeParams = useParams();
+    const [listCategories, setListCategories] = useState([])
+    const gender = useRef(routeParams.gender)
     let productsArray = {};
     let productStuff = [];
     const pageComponent = () => {
@@ -110,11 +117,20 @@ const Product = () => {
         window.scrollTo(0, 0)
         if (location.state != null) {
             data.current = location.state.data
-            category.current = data.current.find(d => d.type === 'ÁO' && d.gender === 'Nam')
-            var ShirtData = data.current.filter(d => d.type === 'ÁO' && d.gender === 'Nam')
+            console.log(data.current)
+            category.current = data.current.find(d => d.type === 'ÁO' && d.gender === gender.current)
+            var ShirtData = data.current.filter(d => d.gender === gender.current)
             setShirtData(ShirtData)
-            var PantData = data.current.filter(d => d.type === 'QUẦN DÀI' && d.gender === 'Nam')
-            setPantData(PantData)
+            const uniqueCategories = [];
+            for (let i = 0; i < ShirtData.length; i++) {
+                if (!uniqueCategories.includes(ShirtData[i].type)) {
+                    uniqueCategories.push(ShirtData[i].type);
+                }
+            }
+            setListCategories(uniqueCategories);
+            console.log(uniqueCategories)
+            // var PantData = data.current.filter(d => d.gender === 'Nam')
+            // setPantData(PantData)
 
             // data = categories['data']
         }
@@ -130,10 +146,7 @@ const Product = () => {
 
     }, [shirtData])
 
-    const getImgURL = (images) => {
-        var newList = images.filter(d => d.colorId !== null)
-        return newList[0].url
-    }
+
 
     const FetchProduct = async (categoryID, page) => {
         isLoading.current = true
@@ -151,6 +164,7 @@ const Product = () => {
 
         }).catch((error) => {
             alert(error)
+            console.log(error)
             isLoading.current = false
         })
     }
@@ -180,111 +194,133 @@ const Product = () => {
     function CheckCategory(event, category) {
         clickCategory(category)
     }
+    const handleCategoryClick = (category) => {
+        // Handle category selection
+        console.log(`Selected category: ${category}`);
+        // console.log(props.gender)
+    };
 
 
 
     return (
         <>
+            <div className='container'>
+                <div className='row'>
+                    <div className='col-4 sticky-top mt-5 align-self-start'>
+                        <Accordion defaultActiveKey="0">
+                            {listCategories.map((category, index) => <Accordion.Item eventKey={index}>
+                                <Accordion.Header>{category}</Accordion.Header>
+                                <Accordion.Body>
+                                    {shirtData.filter(d => d.type == category && d.gender == gender.current).map((sCategory => <div className='categories'>
+                                        <button id={sCategory.id} className='categories-button' onClick={event => CheckCategory(event, sCategory)}>
+                                            {sCategory.name}
+                                        </button>
+                                    </div>))}
+                                </Accordion.Body>
+                            </Accordion.Item>)}
 
-            <div>Man</div>
-            <div className='small-container'>
-                <div className="row row-2">
-                    <div className='genres'><br /> <h3>Áo</h3></div>
-                    <div className='categories'>
-                        {shirtData.map((category) => <button id={category['id']} className='categories-button' onClick={event => CheckCategory(event, category)}>{category['name']}</button>)}
+                        </Accordion>
+                        {/* <div className='small-container'>
+                            <div className="row-2">
+                                <div className='genres'><br /> <h3>Áo</h3></div>
+                                <div className='categories'>
+                                    {shirtData.map((category) => <button id={category['id']} className='categories-button' onClick={event => CheckCategory(event, category)}>{category['name']}</button>)}
+                                </div>
+                                <div className='genresee'> <h3>Quần</h3></div>
+                                <div className='categories'>
+                                    {pantData.map((category) => <button id={category['id']} className='categories-button' onClick={event => CheckCategory(event, category)}>{category['name']}</button>)}
+                                </div>
+                            </div>
+                        </div> */}
                     </div>
-                    <div className='genresee'> <h3>Quần</h3></div>
-                    <div className='categories'>
-                        {pantData.map((category) => <button id={category['id']} className='categories-button' onClick={event => CheckCategory(event, category)}>{category['name']}</button>)}
+                    <div className='col-8'>
+                        {isLoading.current ?
+                            <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
+                                <ColorRing
+                                    visible={true}
+                                    height="80"
+                                    width="80"
 
-                    </div>
-                </div>
+                                    ariaLabel="blocks-loading"
+                                    wrapperStyle={{}}
+                                    wrapperClass="blocks-wrapper"
+                                    colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                                />
+                            </div>
 
-            </div>
-            {isLoading.current ?
-                <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
-                    <ColorRing
-                        visible={true}
-                        height="80"
-                        width="80"
-
-                        ariaLabel="blocks-loading"
-                        wrapperStyle={{}}
-                        wrapperClass="blocks-wrapper"
-                        colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-                    />
-                </div>
-
-                :
-                <div className="small-container">
-                    <div className="row row-2">
-                        <h2>Products</h2>
-                        {/* <select>
+                            :
+                            <div className="small-container">
+                                <div className="row row-2">
+                                    <h2>Products</h2>
+                                    {/* <select>
                             <option>Default sorting</option>
                             <option>Sort by price</option>
                             <option>Sort by popularity</option>
                             <option>Sort by rating</option>
                             <option>Sort by sales</option>
                         </select> */}
-                    </div>
-
-                    <div className="row">
-                        {
-                            products.map((product) =>
-                                <div class="col-lg-4 col-md-12 mb-4">
-                                    <div class="card">
-                                        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                                            data-mdb-ripple-color="light">
-                                            <img src={getImgURL(product.images)} alt=""
-                                                class="w-100" />
-                                            <a href="#!">
-                                                <div class="mask">
-                                                    <div class="d-flex justify-content-start align-items-end h-100">
-                                                        <h5><span class="badge bg-primary ms-2">New</span></h5>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="card-body">
-                                            <Link to='/Detail' state={product}>
-                                                <a href="" class="text-reset">
-                                                    <h5 class="card-title mb-3">{product.title}</h5>
-                                                </a>
-                                            </Link>
-
-                                            <a href="" class="text-reset">
-                                                <p>{currentCategory}</p>
-                                            </a>
-                                            <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
-                                        </div>
-                                    </div>
                                 </div>
-                                // <div className="col-4">
-                                //     <Link to='/Detail' state={product}>
-                                //         <img src={product.images[0].url} alt="" />
-                                //         <h4 >{product.title}</h4>
-                                //     </Link>
-                                //     <div className="rating">
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star-o"></i>
-                                //     </div>
-                                //     <p>{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</p>
-                                // </div>
-                            )
+
+                                <div className="row">
+                                    {
+                                        products.map((product) =>
+                                            <Card product={product} />
+                                            // <div class="col-lg-4 col-md-12 mb-4">
+                                            //     <div class="card">
+                                            //         <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                            //             data-mdb-ripple-color="light">
+                                            //             <img src={getImgURL(product.images)} alt=""
+                                            //                 class="w-100" />
+                                            //             <a href="#!">
+                                            //                 <div class="mask">
+                                            //                     <div class="d-flex justify-content-start align-items-end h-100">
+                                            //                         <h5><span class="badge bg-primary ms-2">New</span></h5>
+                                            //                     </div>
+                                            //                 </div>
+                                            //             </a>
+                                            //         </div>
+                                            //         <div class="card-body">
+                                            //             <Link to='/Detail' state={product}>
+                                            //                 <a href="" class="text-reset">
+                                            //                     <h5 class="card-title mb-3">{product.title}</h5>
+                                            //                 </a>
+                                            //             </Link>
+
+                                            //             <a href="" class="text-reset">
+                                            //                 <p>{currentCategory}</p>
+                                            //             </a>
+                                            //             <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
+                                            //         </div>
+                                            //     </div>
+                                            // </div>
+                                            // <div className="col-4">
+                                            //     <Link to='/Detail' state={product}>
+                                            //         <img src={product.images[0].url} alt="" />
+                                            //         <h4 >{product.title}</h4>
+                                            //     </Link>
+                                            //     <div className="rating">
+                                            //         <i className="fa fa-star"></i>
+                                            //         <i className="fa fa-star"></i>
+                                            //         <i className="fa fa-star"></i>
+                                            //         <i className="fa fa-star"></i>
+                                            //         <i className="fa fa-star-o"></i>
+                                            //     </div>
+                                            //     <p>{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</p>
+                                            // </div>
+                                        )
+                                    }
+                                </div>
+                                <div>
+                                    {pageComponent()}
+                                </div>
+                            </div>
                         }
                     </div>
-                    <div>
-                        {pageComponent()}
-                    </div>
-
                 </div>
 
 
 
-            }
+            </div>
         </>
     )
 }

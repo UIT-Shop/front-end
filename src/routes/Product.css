@@ -1,0 +1,29 @@
+.RecommendProduct {
+    margin: 70px 0;
+}
+
+.categories {
+    width: 100%;
+
+}
+
+.categories>button {
+    width: fit-content;
+    padding: 5px 50px;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    /* background-color: transparent; */
+}
+
+.categories>button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.categories>button.clicked:hover {
+    background-color: #ff523b;
+    color: #fff;
+}

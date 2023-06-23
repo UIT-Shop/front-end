@@ -5,6 +5,7 @@ import { useRef, useReducer } from 'react'
 import { variables } from '../../Variables.js'
 import axious from "axios"
 import { ColorRing } from 'react-loader-spinner'
+import Card from "../common/Card"
 
 const RecommendProduct = () => {
 
@@ -61,57 +62,15 @@ const RecommendProduct = () => {
                 </div>
 
                 :
-                <div className="small-container">
+                <div className="small-container p-4">
                     {
                         localStorage.getItem("JWT") != null ?
-                            <h2 className='pt-5'>Recommendation</h2>
+                            <h2 className='pt-5'>Gợi ý dành cho bạn</h2>
                             : <div></div>
                     }
                     <div className="row">
                         {
-                            products.map((product) =>
-                                <div class="col-lg-4 col-md-12 mb-4">
-                                    <div class="card">
-                                        <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                                            data-mdb-ripple-color="light">
-                                            <img src={getImgURL(product.images)} alt=""
-                                                class="w-100" />
-                                            <a href="#!">
-                                                <div class="mask">
-                                                    <div class="d-flex justify-content-start align-items-end h-100">
-                                                        <h5><span class="badge bg-primary ms-2">New</span></h5>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="card-body">
-                                            <Link to='/Detail' state={product}>
-                                                <a href="" class="text-reset">
-                                                    <h5 class="card-title mb-3">{product.title}</h5>
-                                                </a>
-                                            </Link>
-
-                                            <a href="" class="text-reset">
-                                                <p>Áo thun</p>
-                                            </a>
-                                            <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                                // <div className="col-4">
-                                //     <Link to='/Detail' state={product}>
-                                //         <img src={product.images[0].url} alt="" />
-                                //         <h4 >{product.title}</h4>
-                                //     </Link>
-                                //     <div className="rating">
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star"></i>
-                                //         <i className="fa fa-star-o"></i>
-                                //     </div>
-                                //     <p>{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</p>
-                                // </div>
+                            products.map((product) => <Card product={product} />
                             )
                         }
                     </div>
