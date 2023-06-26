@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useLocation, useParams } from "react-router-dom"
+import { Link, useLocation, useParams, useNavigate } from "react-router-dom"
 import { useRef, useReducer } from 'react'
 import { ColorRing } from 'react-loader-spinner'
 import { variables } from '../Variables'
@@ -9,6 +9,7 @@ import { Accordion } from 'react-bootstrap'
 import './Product.css'
 import Card from '../components/common/Card'
 import FilterBar from '../components/product/FilterBar'
+import { useLoaderData } from 'react-router-dom';
 
 
 const Product = () => {
@@ -16,20 +17,18 @@ const Product = () => {
     const data = useRef([])
     const category = useRef({})
     const [currentCategory, setCate] = useState()
-    const isLoading = useRef(false)
+    const isLoading = useRef(true)
+    const [loadingProduct, setLoadingProduct] = useState(true)
     const colorData = useRef([])
     const [shirtData, setShirtData] = useState([])
-    const [pantData, setPantData] = useState([])
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const pageNumber = useRef(3)
     const [currentPage, setPage] = useState(1)
-    const location = useLocation()
-    const dataCate = location.state.data
-    const routeParams = useParams();
+    const loader = useLoaderData()
+    const navigate = useNavigate();
     const [listCategories, setListCategories] = useState([])
-    const gender = useRef(routeParams.gender)
+    const { gender } = useParams();
     let productsArray = {};
-    let productStuff = [];
     const pageComponent = () => {
         if (pageNumber.current < 5) {
             return <Pagination>
@@ -114,12 +113,36 @@ const Product = () => {
         }
     }
     useEffect(() => {
+    }, [])
+    useEffect(() => {
+
+        setLoadingProduct(false)
+        console.log(products)
+
+    }, [products])
+
+
+    useEffect(() => {
+        isLoading.current = false
+        forceUpdate()
+    }, [listCategories])
+    useEffect(() => {
+        clickCategory(category.current)
+
+    }, [shirtData])
+    useEffect(() => {
         window.scrollTo(0, 0)
-        if (location.state != null) {
-            data.current = location.state.data
+        setLoadingProduct(true)
+        isLoading.current = true
+        const url = variables.API_URL + "Category"
+        axious.get(url).then((result) => {
+            console.log(result.data)
+            data.current = result.data.data
             console.log(data.current)
-            category.current = data.current.find(d => d.type === 'ÁO' && d.gender === gender.current)
-            var ShirtData = data.current.filter(d => d.gender === gender.current)
+            category.current = data.current.find(d => d.type === 'ÁO' && d.gender === gender)
+            console.log(category.current)
+            var ShirtData = data.current.filter(d => d.gender === gender)
+            console.log(ShirtData)
             setShirtData(ShirtData)
             const uniqueCategories = [];
             for (let i = 0; i < ShirtData.length; i++) {
@@ -128,28 +151,17 @@ const Product = () => {
                 }
             }
             setListCategories(uniqueCategories);
+            FetchProduct(category.current['id'], 1)
             console.log(uniqueCategories)
-            // var PantData = data.current.filter(d => d.gender === 'Nam')
-            // setPantData(PantData)
-
-            // data = categories['data']
-        }
-    }, [])
-    useEffect(() => {
-        isLoading.current = false
-        console.log(products)
-        forceUpdate()
-
-    }, [products])
-    useEffect(() => {
-        clickCategory(category.current)
-
-    }, [shirtData])
+        }).catch((error) => {
+            console.log("product error", error)
+        })
+    }, [gender])
 
 
 
     const FetchProduct = async (categoryID, page) => {
-        isLoading.current = true
+        setLoadingProduct(true)
         forceUpdate()
         const url = variables.API_URL + `Product/Category/${categoryID}?page=${page}`
         axious.get(url).then((result) => {
@@ -169,26 +181,32 @@ const Product = () => {
         })
     }
     const clickCategory = (category) => {
-        const listElement = document.getElementsByClassName("categories-button")
-        if (listElement.length > 0) {
-            var element = document.getElementById(category['id']);
+        try {
+            const listElement = document.getElementsByClassName("categories-button")
+            if (listElement.length > 0) {
+                var element = document.getElementById(category['id']);
 
-            if (!element.classList.contains('clicked')) {
-                Array.from(listElement).forEach(Element => {
-                    if (Element.classList.contains('clicked')) {
-                        Element.classList.remove("clicked")
-                        Element.style.backgroundColor = "transparent"
-                        Element.style.color = "#000"
-                    }
-                });
-                element.classList.add("clicked")
-                element.style.backgroundColor = "#000"
-                element.style.color = "#fff"
-                category.current = category
+                if (!element.classList.contains('clicked')) {
+                    Array.from(listElement).forEach(Element => {
+                        if (Element.classList.contains('clicked')) {
+                            Element.classList.remove("clicked")
+                            Element.style.backgroundColor = "transparent"
+                            Element.style.color = "#000"
+                        }
+                    });
+                    element.classList.add("clicked")
+                    element.style.backgroundColor = "#000"
+                    element.style.color = "#fff"
+                    category.current = category
+                }
+                setCate(category['name'])
+                FetchProduct(category['id'], 1)
             }
-            setCate(category['name'])
-            FetchProduct(category['id'], 1)
         }
+        catch (e) {
+            alert(e)
+        }
+
 
     }
     function CheckCategory(event, category) {
@@ -204,23 +222,38 @@ const Product = () => {
 
     return (
         <>
-            <div className='container'>
-                <div className='row'>
-                    <div className='col-4 sticky-top mt-5 align-self-start'>
-                        <Accordion defaultActiveKey="0">
-                            {listCategories.map((category, index) => <Accordion.Item eventKey={index}>
-                                <Accordion.Header>{category}</Accordion.Header>
-                                <Accordion.Body>
-                                    {shirtData.filter(d => d.type == category && d.gender == gender.current).map((sCategory => <div className='categories'>
-                                        <button id={sCategory.id} className='categories-button' onClick={event => CheckCategory(event, sCategory)}>
-                                            {sCategory.name}
-                                        </button>
-                                    </div>))}
-                                </Accordion.Body>
-                            </Accordion.Item>)}
+            {isLoading.current ?
+                <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
+                    <ColorRing
+                        visible={true}
+                        height="80"
+                        width="80"
 
-                        </Accordion>
-                        {/* <div className='small-container'>
+                        ariaLabel="blocks-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="blocks-wrapper"
+                        colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                    />
+                </div>
+
+                :
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-4 sticky-top pt-5 align-self-start'>
+                            <Accordion defaultActiveKey="0">
+                                {listCategories.map((category, index) => <Accordion.Item eventKey={index}>
+                                    <Accordion.Header>{category}</Accordion.Header>
+                                    <Accordion.Body>
+                                        {shirtData.filter(d => d.type == category && d.gender == gender).map((sCategory => <div className='categories'>
+                                            <button id={sCategory.id} className='categories-button' onClick={event => CheckCategory(event, sCategory)}>
+                                                {sCategory.name}
+                                            </button>
+                                        </div>))}
+                                    </Accordion.Body>
+                                </Accordion.Item>)}
+
+                            </Accordion>
+                            {/* <div className='small-container'>
                             <div className="row-2">
                                 <div className='genres'><br /> <h3>Áo</h3></div>
                                 <div className='categories'>
@@ -232,23 +265,8 @@ const Product = () => {
                                 </div>
                             </div>
                         </div> */}
-                    </div>
-                    <div className='col-8'>
-                        {isLoading.current ?
-                            <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
-                                <ColorRing
-                                    visible={true}
-                                    height="80"
-                                    width="80"
-
-                                    ariaLabel="blocks-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass="blocks-wrapper"
-                                    colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-                                />
-                            </div>
-
-                            :
+                        </div>
+                        <div className='col-8'>
                             <div className="small-container">
                                 <div className="row row-2">
                                     <h2>Products</h2>
@@ -263,66 +281,87 @@ const Product = () => {
 
                                 <div className="row">
                                     {
-                                        products.map((product) =>
-                                            <Card product={product} />
-                                            // <div class="col-lg-4 col-md-12 mb-4">
-                                            //     <div class="card">
-                                            //         <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                                            //             data-mdb-ripple-color="light">
-                                            //             <img src={getImgURL(product.images)} alt=""
-                                            //                 class="w-100" />
-                                            //             <a href="#!">
-                                            //                 <div class="mask">
-                                            //                     <div class="d-flex justify-content-start align-items-end h-100">
-                                            //                         <h5><span class="badge bg-primary ms-2">New</span></h5>
-                                            //                     </div>
-                                            //                 </div>
-                                            //             </a>
-                                            //         </div>
-                                            //         <div class="card-body">
-                                            //             <Link to='/Detail' state={product}>
-                                            //                 <a href="" class="text-reset">
-                                            //                     <h5 class="card-title mb-3">{product.title}</h5>
-                                            //                 </a>
-                                            //             </Link>
+                                        loadingProduct ? <ColorRing
+                                            visible={true}
+                                            height="80"
+                                            width="80"
 
-                                            //             <a href="" class="text-reset">
-                                            //                 <p>{currentCategory}</p>
-                                            //             </a>
-                                            //             <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
-                                            //         </div>
-                                            //     </div>
-                                            // </div>
-                                            // <div className="col-4">
-                                            //     <Link to='/Detail' state={product}>
-                                            //         <img src={product.images[0].url} alt="" />
-                                            //         <h4 >{product.title}</h4>
-                                            //     </Link>
-                                            //     <div className="rating">
-                                            //         <i className="fa fa-star"></i>
-                                            //         <i className="fa fa-star"></i>
-                                            //         <i className="fa fa-star"></i>
-                                            //         <i className="fa fa-star"></i>
-                                            //         <i className="fa fa-star-o"></i>
-                                            //     </div>
-                                            //     <p>{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</p>
-                                            // </div>
-                                        )
+                                            ariaLabel="blocks-loading"
+                                            wrapperStyle={{}}
+                                            wrapperClass="blocks-wrapper"
+                                            colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                                        />
+                                            :
+                                            <div className='row'>
+                                                {
+                                                    products.map((product) =>
+                                                        <Card product={product} category={currentCategory} />
+                                                        // <div class="col-lg-4 col-md-12 mb-4">
+                                                        //     <div class="card">
+                                                        //         <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                                        //             data-mdb-ripple-color="light">
+                                                        //             <img src={getImgURL(product.images)} alt=""
+                                                        //                 class="w-100" />
+                                                        //             <a href="#!">
+                                                        //                 <div class="mask">
+                                                        //                     <div class="d-flex justify-content-start align-items-end h-100">
+                                                        //                         <h5><span class="badge bg-primary ms-2">New</span></h5>
+                                                        //                     </div>
+                                                        //                 </div>
+                                                        //             </a>
+                                                        //         </div>
+                                                        //         <div class="card-body">
+                                                        //             <Link to='/Detail' state={product}>
+                                                        //                 <a href="" class="text-reset">
+                                                        //                     <h5 class="card-title mb-3">{product.title}</h5>
+                                                        //                 </a>
+                                                        //             </Link>
+
+                                                        //             <a href="" class="text-reset">
+                                                        //                 <p>{currentCategory}</p>
+                                                        //             </a>
+                                                        //             <h6 class="mb-3">{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
+                                                        //         </div>
+                                                        //     </div>
+                                                        // </div>
+                                                        // <div className="col-4">
+                                                        //     <Link to='/Detail' state={product}>
+                                                        //         <img src={product.images[0].url} alt="" />
+                                                        //         <h4 >{product.title}</h4>
+                                                        //     </Link>
+                                                        //     <div className="rating">
+                                                        //         <i className="fa fa-star"></i>
+                                                        //         <i className="fa fa-star"></i>
+                                                        //         <i className="fa fa-star"></i>
+                                                        //         <i className="fa fa-star"></i>
+                                                        //         <i className="fa fa-star-o"></i>
+                                                        //     </div>
+                                                        //     <p>{product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</p>
+                                                        // </div>
+                                                    )
+                                                }
+                                                <div>
+                                                    {pageComponent()}
+                                                </div>
+                                            </div>
+
                                     }
                                 </div>
-                                <div>
-                                    {pageComponent()}
-                                </div>
                             </div>
-                        }
+
+                        </div>
                     </div>
+
+
+
                 </div>
-
-
-
-            </div>
+            }
         </>
     )
 }
 
 export default Product
+
+export async function loader() {
+
+}

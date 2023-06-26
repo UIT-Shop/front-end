@@ -16,8 +16,12 @@ const Card = (props) => {
     useEffect(() => {
     }, [])
     const getImgURL = (images) => {
-        var newList = images.filter(d => d.colorId !== null)
-        return newList[0].url
+        var newList = images.filter((d) => d.colorId !== 999);
+        if (newList.length === 0) {
+            return images[0].url;
+        } else {
+            return newList[0].url;
+        }
     }
     return (
         imageError ? null :
@@ -41,9 +45,17 @@ const Card = (props) => {
                                 <h5 className="card-title mb-3 title">{props.product.title}</h5>
                             </a>
                         </Link>
+                        <a></a>
 
                         <a href="" className="text-reset">
-                            <p>{props.product.category.name}</p>
+                            {
+                                props.category == null ?
+                                    <p>{props.product.category.name}</p>
+                                    :
+                                    <p>{props.category}</p>
+
+                            }
+
                         </a>
                         <h6 class="mb-3">{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
                     </div>

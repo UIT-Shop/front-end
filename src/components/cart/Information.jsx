@@ -159,7 +159,7 @@ function Information() {
                     colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
                 />
             </div> :
-                <div>
+                <div className='pt-5'>
                     <form onSubmit={(e) => saveData(e)} action className='w-50 mt-5 pb-3 mb-5 border border-primary rounded container d-flex align-items-center justify-content-center'>
                         <fieldset className='w-75'>
                             <legend className='mt-3'>Order Information</legend>

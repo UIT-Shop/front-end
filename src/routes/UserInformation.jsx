@@ -90,7 +90,7 @@ function UserInformation() {
                         colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
                     />
                 </div> :
-                    <div className='mt-5'>
+                    <div className='mt-5 pt-3'>
                         <form onSubmit={(e) => saveData(e)} action className='w-50 mt-5 pb-3 mb-5 border border-primary rounded container d-flex align-items-center justify-content-center'>
 
 

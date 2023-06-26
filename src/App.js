@@ -1,7 +1,7 @@
 import './App.css';
 
 import Home from './routes/Home'
-import Product from './routes/Product'
+import Product, { loader as productLoader } from './routes/Product'
 import Account from './routes/Account'
 import Cart from './routes/Cart'
 import Detail from './routes/Detail'
@@ -40,17 +40,12 @@ const router = createBrowserRouter([
         //     ]
         //   }
         // ]
-        // loader: postsLoader,
-        // children: [
-        //   { path: '/create-post', element: <NewPost />, action: newPostAction },
-        //   { path: '/:postId', element: <PostDetails />, loader: postDetailsLoader }
-        // ],
       },
       {
         path: '/product/:gender',
         element: <Product />,
-
         errorElement: <ErrorBoundary />,
+        loader: productLoader,
       },
       {
         path: '/product/detail/:id',
@@ -111,7 +106,8 @@ function App() {
     axios.get(url).then((result) => {
       console.log(result.status)
     }).catch((error) => {
-      if (error.response.status == 401) {
+      console.log(error.response.status)
+      if (error.response.status === '401') {
         localStorage.removeItem('JWT')
       }
     })

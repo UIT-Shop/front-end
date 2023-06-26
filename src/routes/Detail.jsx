@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import Pagination from 'react-bootstrap/Pagination';
 import ImageGallery from 'react-image-gallery';
 import Moment from 'moment';
+import { Card } from 'react-bootstrap';
 
 const Detail = () => {
     Moment.locale('vi');
@@ -346,8 +347,8 @@ const Detail = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="small-container p-4">
-                        <div className="row row-2">
+                    <div className="small-container mt-5 pl-2">
+                        <div className="row pl-5">
                             <h2>Đánh giá</h2>
                         </div>
                     </div>
@@ -368,30 +369,32 @@ const Detail = () => {
                             <div className='p-4'>
 
                                 {listRating.current.map((rating) =>
-                                    <div>
-                                        <div className="small-container">
-                                            <h3>{rating.userName}</h3>
-                                            <div className="rating">
-                                                {
-                                                    [...Array(rating.rating)].map((elementInArray, index) => (
-                                                        <i className="fa fa-star"></i>
-                                                    )
-                                                    )
-                                                }
-                                                {
+                                    <Card className='m-4'>
+                                        <Card.Body>
+                                            <div className="small-container">
+                                                <h3>{rating.userName}</h3>
+                                                <div className="rating">
+                                                    {
+                                                        [...Array(rating.rating)].map((elementInArray, index) => (
+                                                            <i className="fa fa-star"></i>
+                                                        )
+                                                        )
+                                                    }
+                                                    {
 
-                                                    [...Array(5 - rating.rating)].map((elementInArray, index) => (
-                                                        <i className="fa fa-star-o"></i>
-                                                    )
-                                                    )
-                                                }
+                                                        [...Array(5 - rating.rating)].map((elementInArray, index) => (
+                                                            <i className="fa fa-star-o"></i>
+                                                        )
+                                                        )
+                                                    }
 
+                                                </div>
+                                                <p>{Moment(rating.commentDate).format('HH:mm:ss - DD/MM/yyyy')}</p>
+                                                <h5>{rating.content === "" ? "Không có nội dung" : rating.content}</h5>
                                             </div>
-                                            <p>{Moment(rating.commentDate).format('HH:mm:ss - DD/MM/yyyy')}</p>
-                                            <h5>{rating.content === "" ? "Không có nội dung" : rating.content}</h5>
-                                        </div>
-                                        <br />
-                                    </div>
+                                            <br />
+                                        </Card.Body>
+                                    </Card>
                                 )}
                                 <div className='my-5'>
                                     {pageComponent()}

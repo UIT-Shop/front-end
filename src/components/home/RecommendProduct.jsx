@@ -53,7 +53,6 @@ const RecommendProduct = () => {
                         visible={true}
                         height="80"
                         width="80"
-
                         ariaLabel="blocks-loading"
                         wrapperStyle={{}}
                         wrapperClass="blocks-wrapper"
@@ -70,7 +69,7 @@ const RecommendProduct = () => {
                     }
                     <div className="row">
                         {
-                            products.map((product) => <Card product={product} />
+                            products.map((product) => <Card product={product} isRecommend={true} />
                             )
                         }
                     </div>

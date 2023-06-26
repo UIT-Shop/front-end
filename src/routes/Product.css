@@ -8,13 +8,14 @@
 }
 
 .categories>button {
-    width: fit-content;
+
+    width: 100%;
     padding: 5px 50px;
     background-color: transparent;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    align-self: center;
+    align-items: left;
+    justify-content: left;
+    align-content: left;
+    align-self: left;
     /* background-color: transparent; */
 }
 

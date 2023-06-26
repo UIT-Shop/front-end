@@ -51,7 +51,7 @@ const Order = () => {
     }
 
     return (
-        <>
+        <div style={{ minHeight: '1000px' }}>
             {isLoading.current ?
                 <div style={{ width: "100%", display: "flex", marginTop: 240, marginBottom: 240, justifyContent: 'center', alignItems: 'center' }}>
                     <ColorRing
@@ -84,7 +84,7 @@ const Order = () => {
                                     <td className='align-middle'>{Moment(product.orderDate).format('HH:mm:ss - DD/MM/yyyy')}</td>
                                     <td className='align-middle'>{(product.totalPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                                     <td className='align-middle'>{getStatus(product.status)}</td>
-                                    <td className='align-middle'><Link to={"/Order/" + product.id} state={product} ><button type="button" class="btn btn-primary" onClick={(e) => { }}>Detail</button></Link></td>
+                                    <td className='align-middle'><Link to={"/Order/" + product.id} state={product} ><button type="button" class="btn btn-primary" onClick={(e) => { }}>Chi tiết</button></Link></td>
                                 </tr>
                             )
                         }
@@ -113,7 +113,7 @@ const Order = () => {
                 </Modal.Footer>
             </Modal> */}
 
-        </>
+        </div>
     )
 }
 
