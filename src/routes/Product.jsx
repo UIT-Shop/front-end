@@ -19,6 +19,8 @@ const Product = () => {
     const [currentCategory, setCate] = useState()
     const isLoading = useRef(true)
     const [loadingProduct, setLoadingProduct] = useState(true)
+    const isSearching = useRef(false)
+    const searchInput = useRef('')
     const colorData = useRef([])
     const [shirtData, setShirtData] = useState([])
     const [, forceUpdate] = useReducer(x => x + 1, 0);
@@ -29,6 +31,7 @@ const Product = () => {
     const [listCategories, setListCategories] = useState([])
     const { gender } = useParams();
     let productsArray = {};
+    const [searchResult, setSearchResult] = useState("")
     const pageComponent = () => {
         if (pageNumber.current < 5) {
             return <Pagination>
@@ -115,10 +118,6 @@ const Product = () => {
     useEffect(() => {
     }, [])
     useEffect(() => {
-
-        setLoadingProduct(false)
-        console.log(products)
-
     }, [products])
 
 
@@ -156,29 +155,37 @@ const Product = () => {
         }).catch((error) => {
             console.log("product error", error)
         })
+            .finally(setLoadingProduct(false))
     }, [gender])
 
 
 
-    const FetchProduct = async (categoryID, page) => {
+    const FetchProduct = async (param, page) => {
         setLoadingProduct(true)
         forceUpdate()
-        const url = variables.API_URL + `Product/Category/${categoryID}?page=${page}`
+        let url = ''
+        console.log(isSearching.current)
+        isSearching.current ?
+            url = variables.API_URL + `Product/search/${param}/${page}` :
+            url = variables.API_URL + `Product/Category/${param}?page=${page}`
         axious.get(url).then((result) => {
-            productsArray = result.data['data'].products.filter(d => d.images.length > 0 && d.variants.length > 0)
+            console.log(result)
+            productsArray = result.data['data'].products
             // var parsedData = productsArray.map(el => 
             //     el.images = el.images.filter(x => x.colorId != null))
             // parsedData = parsedData.filter(d => d.images.length > 0 )
             setPage(page)
             setProducts(productsArray)
+            setCate(productsArray[0].category.name)
             pageNumber.current = result.data.data.pages
-
+            setLoadingProduct(false)
 
         }).catch((error) => {
-            alert(error)
             console.log(error)
-            isLoading.current = false
-        })
+            setLoadingProduct(false)
+        }).finally(
+
+        )
     }
     const clickCategory = (category) => {
         try {
@@ -199,7 +206,6 @@ const Product = () => {
                     element.style.color = "#fff"
                     category.current = category
                 }
-                setCate(category['name'])
                 FetchProduct(category['id'], 1)
             }
         }
@@ -210,6 +216,7 @@ const Product = () => {
 
     }
     function CheckCategory(event, category) {
+        isSearching.current = false
         clickCategory(category)
     }
     const handleCategoryClick = (category) => {
@@ -217,6 +224,14 @@ const Product = () => {
         console.log(`Selected category: ${category}`);
         // console.log(props.gender)
     };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        isSearching.current = true
+        setSearchResult(searchInput.current.value)
+        FetchProduct(searchInput.current.value, 1)
+
+    }
 
 
 
@@ -240,6 +255,10 @@ const Product = () => {
                 <div className='container'>
                     <div className='row'>
                         <div className='col-4 sticky-top pt-5 align-self-start'>
+                            <form class="input-group pt-5" onSubmit={(e) => handleSearch(e)}>
+                                <input ref={searchInput} type="text" class="form-control" style={{ height: '2em' }} placeholder="Search" aria-label="Search" aria-describedby="button-addon2" />
+                                <button type="submit" class="btn btn-secondary" id="button-addon2"><i className="fa fa-search"></i></button>
+                            </form>
                             <Accordion defaultActiveKey="0">
                                 {listCategories.map((category, index) => <Accordion.Item eventKey={index}>
                                     <Accordion.Header>{category}</Accordion.Header>
@@ -269,7 +288,7 @@ const Product = () => {
                         <div className='col-8'>
                             <div className="small-container">
                                 <div className="row row-2">
-                                    <h2>Products</h2>
+
                                     {/* <select>
                             <option>Default sorting</option>
                             <option>Sort by price</option>
@@ -294,8 +313,17 @@ const Product = () => {
                                             :
                                             <div className='row'>
                                                 {
+                                                    isSearching.current ?
+                                                        <h2>{`Kết quả tìm kiếm ${searchResult}:`}</h2>
+                                                        : <h2>{`${currentCategory} ${gender}`}</h2>
+                                                }
+                                                {
                                                     products.map((product) =>
-                                                        <Card product={product} category={currentCategory} />
+                                                        isSearching.current ?
+                                                            <Card product={product} />
+                                                            :
+                                                            <Card product={product} category={currentCategory} />
+
                                                         // <div class="col-lg-4 col-md-12 mb-4">
                                                         //     <div class="card">
                                                         //         <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"

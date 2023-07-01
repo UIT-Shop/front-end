@@ -7,10 +7,12 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import axious from "axios"
 import { ToastContainer, toast } from 'react-toastify';
 import { ColorRing } from 'react-loader-spinner'
+import { Modal, Button } from 'react-bootstrap';
 
 function Information() {
     let navigate = useNavigate();
 
+    const [isShow, invokeModal] = useState(false)
     const [province, setProvince] = useState({})
     const [district, setDistrict] = useState({})
     const [ward, setWard] = useState({})
@@ -136,11 +138,26 @@ function Information() {
         e.preventDefault();
         const url = variables.API_URL + `Order`
         axious.post(url, { wardId: ward.id, street: street, name: name, phone: phoneNumber }).then((result) => {
-            alert("Bạn đã đặt hàng thành công")
-            navigate("/")
+            toast.success('Cảm ơn bạn đã đặt hàng!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            window.scrollTo(0, 0)
+            initModal()
+
         }).catch((error) => {
             alert(error)
         })
+    }
+
+    const initModal = () => {
+        return invokeModal(!isShow)
     }
 
     return (
@@ -162,13 +179,13 @@ function Information() {
                 <div className='pt-5'>
                     <form onSubmit={(e) => saveData(e)} action className='w-50 mt-5 pb-3 mb-5 border border-primary rounded container d-flex align-items-center justify-content-center'>
                         <fieldset className='w-75'>
-                            <legend className='mt-3'>Order Information</legend>
+                            <legend className='mt-3'>Thông tin đặt hàng</legend>
                             <div class="form-group">
-                                <label class="form-label mt-4" for="inputDefault">Name</label>
+                                <label class="form-label mt-4" for="inputDefault">Tên</label>
                                 <input type="text" class="form-control" value={name} placeholder="Name" id="inputDefault" onChange={(e) => setName(e.target.value)} required />
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="inputDefault">Phone number</label>
+                                <label class="form-label" for="inputDefault">Số điện thoại</label>
                                 <input type="tel" class="form-control" value={phoneNumber} pattern='(84|0[3|5|7|8|9])+([0-9]{8})\b' placeholder="Phone number" id="inputDefault" onChange={(e) => setPhonenumber(e.target.value)} required />
                             </div>
                             <div class="form-group w-75">
@@ -210,6 +227,19 @@ function Information() {
                             <button type="submit" class="btn btn-primary mt-3">Đặt hàng</button>
                         </fieldset>
                     </form>
+                    <Modal show={isShow}>
+                        <Modal.Header closeButton onClick={initModal}>
+                            <Modal.Title>Thông báo</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h2>Cảm ơn vì đã đặt hàng của chúng tôi!</h2>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => { navigate('/Order') }}>
+                                Tiếp theo
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
             }
 

@@ -70,10 +70,10 @@ const NavBar = () => {
                                 </a>
                             </li> */}
                             <li className="nav-item">
-                                <Link to="/product/Nam" state={categories}><a className="nav-link" href="#">Nam</a></Link>
+                                <Link to="/product/Nam" ><a className="nav-link" href="#">Nam</a></Link>
                             </li>
                             <li className="nav-item">
-                                <Link to="/product/Nữ" state={categories}><a className="nav-link" href="#">Nữ</a></Link>
+                                <Link to="/product/Nữ" ><a className="nav-link" href="#">Nữ</a></Link>
                             </li>
                             {/* <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>

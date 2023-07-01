@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import { ColorRing } from 'react-loader-spinner'
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useRef, useReducer } from 'react'
 import { variables } from '../../Variables'
 import { Modal, Button } from 'react-bootstrap'
@@ -21,11 +21,10 @@ const OrderDetail = () => {
     const totalPrice = useRef(0)
     const isLoading = useRef(true)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
+    let navigate = useNavigate();
 
 
     const initModal = () => {
-        setComment("")
-        setRating(0)
         return invokeModal(!isShow)
     }
     const changeRating = (newRating) => {
@@ -48,7 +47,7 @@ const OrderDetail = () => {
     const RateProduct = async (variantID) => {
         const url = variables.API_URL + `Comment`
         axious.post(url, { productVariantId: variantID, content: comment, rating: rating }).then((result) => {
-            toast.success('Comment sucessfully', {
+            toast.success('Cảm ơn bạn đã đánh giá cho sản phẩm của chúng tôi! ❤️', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -58,6 +57,7 @@ const OrderDetail = () => {
                 progress: undefined,
                 theme: 'colored',
             });
+            
 
             initModal()
         }).catch((error) => {

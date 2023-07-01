@@ -5,6 +5,8 @@ import { variables } from '../Variables'
 import { useRef, useReducer } from 'react'
 import { ColorRing } from 'react-loader-spinner'
 import { Link } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 
@@ -92,6 +94,7 @@ const Cart = () => {
                 </div>
                 :
                 <table class="table table-hover mt-5">
+                    <ToastContainer />
                     <thead>
                         <tr className='table-dark'>
                             <th scope="col">Sản phẩm</th>

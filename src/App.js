@@ -107,7 +107,7 @@ function App() {
       console.log(result.status)
     }).catch((error) => {
       console.log(error.response.status)
-      if (error.response.status === '401') {
+      if (error.response.status === 401) {
         localStorage.removeItem('JWT')
       }
     })

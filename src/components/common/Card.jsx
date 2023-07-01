@@ -12,8 +12,12 @@ const Card = (props) => {
         setImageError(true);
     };
 
+    const [rating, setRating] = useState(0)
 
     useEffect(() => {
+        setRating(Math.ceil(props.product.rating))
+        console.log(rating)
+        console.log(props.product)
     }, [])
     const getImgURL = (images) => {
         var newList = images.filter((d) => d.colorId !== 999);
@@ -49,15 +53,27 @@ const Card = (props) => {
 
                         <a href="" className="text-reset">
                             {
-                                props.category == null ?
-                                    <p>{props.product.category.name}</p>
-                                    :
-                                    <p>{props.category}</p>
+                                <p style={{ marginBottom: 0 }}>{props.product.category.name}</p>
+                            }
+                        </a>
+                        <div className="rating">
+                            {
+                                [...Array(rating)].map(() => (
+                                    <i className="fa fa-star"></i>
+                                ))
+                            }
+                            {
+                                [...Array(5 - rating)].map(() => (
+                                    <i className="fa fa-star-o"></i>
+                                )
+                                )
 
                             }
+                            {"\t" + Number((props.product.rating)).toFixed(1) + "/5"}
 
-                        </a>
-                        <h6 class="mb-3">{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h6>
+                        </div>
+
+                        <h5 class="mb-3">{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h5>
                     </div>
                 </div>
             </div>
