@@ -149,7 +149,7 @@ const Cart = () => {
                                     <td></td>
 
                                     <td className='align-middle'> <h5 className='mt-5'>Phí ship: Miễn phí</h5>Total: {totalPrice.current.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
-                                    <td className='align-middle'><Link to="/Information" state={totalPrice.current}><button type="button" class="btn btn-primary">Next</button> </Link></td>
+                                    <td className='align-middle'><Link to="/Information" state={products}><button type="button" class="btn btn-primary">Next</button> </Link></td>
                                 </tr>
                         }
 
