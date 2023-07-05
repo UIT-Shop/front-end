@@ -37,6 +37,9 @@ const Detail = () => {
     const pageNumber = useRef(3)
     const [currentPage, setPage] = useState(1)
     const avgRating = useRef(0)
+    const [isSaling, setIsSaling] = useState(false)
+    const [salingVariant, setSalingVariant] = useState({})
+
 
     const pageComponent = () => {
         if (pageNumber.current < 5) {
@@ -129,6 +132,14 @@ const Detail = () => {
         optionSize.current = size
         console.log(colorID + "size" + size)
         var variant = data.current.variants.find(({ colorId, productSize }) => colorId === colorID && productSize === size)
+        if (variant.price < variant.originalPrice) {
+            console.log(variant)
+            setIsSaling(true)
+        }
+        else {
+            setIsSaling(false)
+        }
+        setSalingVariant(variant)
         console.log(variant)
         currentImage.current = variant.color.images[0]
         availableQuantity.current = variant.quantity
@@ -159,7 +170,6 @@ const Detail = () => {
             getColors()
             avgRating.current = parseInt(Number((data.current.rating)).toFixed(0))
             console.log("Rating", avgRating.current)
-
         }).catch((error) => {
             alert(error)
             console.log(error);
@@ -221,10 +231,32 @@ const Detail = () => {
         uncolorData.current = Images.filter(d => d.color === null)
         if (uncolorData.current.length < 4)
             endImg.current = uncolorData.current.length
+
+
         currentColor.current = colorData.current[0].colorId
         currentImage.current = colorData.current[0]
         console.log("color", currentColor.current)
         getQuantity(currentColor.current, optionSize.current)
+        console.log(data.current.variants)
+        for (let i = 0; i < Object.keys(data.current.variants).length; i++) {
+            console.log(Object.keys(data.current.variants).length)
+            if (data.current.variants[i].price < data.current.variants[i].originalPrice) {
+
+                setSalingVariant(data.current.variants[i])
+                setIsSaling(true)
+                let firstColor = colorData.current.find((color) => color.colorId === data.current.variants[i].colorId)
+                let firstColorIndex = colorData.current.findIndex((color) => color.colorId === data.current.variants[i].colorId)
+
+
+
+                currentColorIndex.current = firstColorIndex
+                currentColor.current = colorData.current[firstColorIndex].colorId
+                currentImage.current = colorData.current[firstColorIndex]
+                console.log(firstColor)
+                console.log(firstColorIndex)
+                break;
+            }
+        }
         forceUpdate()
     }
     const changeColor = (index, ID) => {
@@ -300,7 +332,17 @@ const Detail = () => {
                             <div className="col-2">
                                 {/* <p>Home / T-Shirt</p> */}
                                 <h1>{data.current.title}</h1>
-                                <h4>{data.current.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
+                                {
+                                    isSaling ?
+                                        <div>
+                                            <h2 style={{ color: "red" }}>{salingVariant.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h2>
+                                            <del >{salingVariant.originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</del>
+                                        </div>
+                                        :
+                                        <div>
+                                            <h2 class="mb-3"  >{salingVariant.originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h2>
+                                        </div>
+                                }
                                 <div>
                                     {
                                         [...Array(avgRating.current)].map(() => (
@@ -320,9 +362,8 @@ const Detail = () => {
                                 <h5>Chọn màu</h5>
                                 {
                                     colorData.current.map((color, i) =>
-
                                         <div className="form-check form-check-inline">
-                                            <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio{index}" value="option1" onClick={() => changeColor(i, color.colorId)} defaultChecked={i === 0 ? true : false} />
+                                            <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio{index}" value="option1" onClick={() => changeColor(i, color.colorId)} defaultChecked={i === currentColorIndex.current ? true : false} />
                                             <label className="form-check-label" for="inlineRadio1">{color.color.name}</label>
                                         </div>
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
 import './Card.css'
@@ -11,15 +11,33 @@ const Card = (props) => {
     const handleImageError = () => {
         setImageError(true);
     };
+    const imgUrl = useRef("")
+    const [isSaling, setIsSaling] = useState(false)
+    const [salingVariant, setSalingVariant] = useState({})
+
+    const showPrice = () => {
+        for (let i = 0; i < Object.keys(props.product.variants).length; i++) {
+            if (props.product.variants[i].price < props.product.variants[i].originalPrice) {
+                console.log(props.product.variants[i])
+                setSalingVariant(props.product.variants[i])
+                setIsSaling(true)
+                imgUrl.current = props.product.images.filter((d) => d.colorId === props.product.variants[i].colorId)[0].url
+                console.log(imgUrl)
+                break
+            }
+        }
+    }
 
     const [rating, setRating] = useState(0)
 
     useEffect(() => {
         setRating(Math.ceil(props.product.rating))
-        console.log(rating)
-        console.log(props.product)
+        showPrice()
     }, [])
     const getImgURL = (images) => {
+        if (imgUrl.current !== "") {
+            return imgUrl.current
+        }
         var newList = images.filter((d) => d.colorId !== 999);
         if (newList.length === 0) {
             return images[0].url;
@@ -71,9 +89,22 @@ const Card = (props) => {
                             }
                             {"\t" + Number((props.product.rating)).toFixed(1) + "/5"}
 
+                            {
+                                isSaling ?
+                                    <div class="mb-3" style={{ height: '2em' }}>
+                                        <h4 style={{ color: "red" }}>{salingVariant.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
+                                        <del >{salingVariant.originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</del>
+                                    </div>
+                                    :
+                                    <div class="mb-3" style={{ height: '2em' }}>
+                                        <h4 class="mb-3"  >{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
+
+                                    </div>
+
+                            }
                         </div>
 
-                        <h5 class="mb-3">{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h5>
+
                     </div>
                 </div>
             </div>

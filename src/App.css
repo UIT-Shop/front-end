@@ -150,18 +150,6 @@ select:focus {
   padding-top: 10px
 }
 
-.single-product h4 {
-  margin: 10px 0;
-  font-size: 22px;
-  height: 50px;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  /* number of lines to show */
-  -webkit-box-orient: vertical;
-}
 
 .single-product select {
   display: block;
