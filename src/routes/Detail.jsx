@@ -12,6 +12,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import ImageGallery from 'react-image-gallery';
 import Moment from 'moment';
 import { Card } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap'
 
 const Detail = () => {
     Moment.locale('vi');
@@ -147,10 +148,10 @@ const Detail = () => {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0)
         if (location.state != null) {
             console.log(location.state)
             FetchProduct(location.state.id)
-            window.scrollTo(0, 0)
             // console.log(data)
         }
     }, [])
@@ -384,6 +385,24 @@ const Detail = () => {
                                 </div>
                                 <h3>Chi tiết sản phẩm<i className="fa fa-indent"></i></h3>
                                 <p>{data.current.description}</p>
+                                <Accordion defaultActiveKey="0">
+                                    <Accordion.Item eventKey='0'>
+                                        <Accordion.Header>Tổng quan</Accordion.Header>
+                                        <Accordion.Body>
+                                            <div dangerouslySetInnerHTML={{ __html: data.current.overview.replace(/\n/g, "<br/>") }}>
+                                            </div>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
+                                <Accordion defaultActiveKey="0">
+                                    <Accordion.Item eventKey='0'>
+                                        <Accordion.Header>Chất liệu</Accordion.Header>
+                                        <Accordion.Body>
+                                            <div dangerouslySetInnerHTML={{ __html: data.current.material.replace(/\n/g, "<br/>") }}>
+                                            </div>
+                                        </Accordion.Body>
+                                    </Accordion.Item>
+                                </Accordion>
 
                             </div>
                         </div>

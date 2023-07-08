@@ -20,11 +20,14 @@ const OrderDetail = () => {
     const [products, setProducts] = useState({ "initialized": false })
     const totalPrice = useRef(0)
     const isLoading = useRef(true)
+    const variantId = useRef(0)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     let navigate = useNavigate();
 
 
     const initModal = () => {
+        // alert(variantId)
+        // variantId.current = variantId
         return invokeModal(!isShow)
     }
     const changeRating = (newRating) => {
@@ -46,7 +49,8 @@ const OrderDetail = () => {
 
     const RateProduct = async (variantID) => {
         const url = variables.API_URL + `Comment`
-        axious.post(url, { productVariantId: variantID, content: comment, rating: rating }).then((result) => {
+        alert(variantID)
+        axious.post(url, { productVariantId: variantID, content: comment, rating: rating, orderId: location.state.id }).then((result) => {
             toast.success('Cảm ơn bạn đã đánh giá cho sản phẩm của chúng tôi! ❤️', {
                 position: 'top-right',
                 autoClose: 5000,
@@ -57,7 +61,7 @@ const OrderDetail = () => {
                 progress: undefined,
                 theme: 'colored',
             });
-            
+
 
             initModal()
         }).catch((error) => {
@@ -72,7 +76,7 @@ const OrderDetail = () => {
         const url = variables.API_URL + `Order/${orderID}`
         axious.get(url).then((result) => {
             setProducts(result.data.data)
-
+            console.log(result.data.data)
         }).catch((error) => {
             alert(error)
             isLoading.current = true
@@ -125,41 +129,42 @@ const OrderDetail = () => {
                                     <td className='align-middle'>{product.productSize}</td>
                                     <td className='align-middle'>{product.quantity}</td>
                                     <td className='align-middle'>{(product.totalPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
-                                    <td className='align-middle'> <Button variant="primary" onClick={initModal} disabled={products.status !== 3}>
-                                        Đánh giá
-                                    </Button>
-                                        <Modal show={isShow}>
-                                            <Modal.Header closeButton onClick={initModal}>
-                                                <Modal.Title>Đánh giá</Modal.Title>
-                                            </Modal.Header>
-                                            <Modal.Body>
-                                                <Rating style={{ maxWidth: 250 }} value={rating} onChange={(value) => changeRating(value)} />
-                                                <div className='pt-2'>Nhận xét của bạn</div>
-                                                <textarea class="form-control border-1" value={comment} onChange={(e) => setComment(e.target.value)} spellcheck="false"></textarea>
-                                            </Modal.Body>
-                                            <Modal.Footer>
-                                                <Button variant="danger" onClick={initModal}>
-                                                    Đóng cửa sổ
-                                                </Button>
-                                                <Button variant="primary" onClick={() => RateProduct(product.productVariantID)}>
-                                                    Đánh giá
-                                                </Button>
-                                            </Modal.Footer>
-                                        </Modal></td>
-
-
+                                    <td className='align-middle'>
+                                        <Button variant="primary" onClick={initModal(product.productVariantID)} disabled={products.status !== 3}>
+                                            Đánh giá
+                                        </Button>
+                                    </td>
                                 </tr>
                             )
                         }
+
                         <tr>
                             <td colSpan={4}>{"Address: " + products.address.fullAddress}<br />Phone number : {products.phone}<br />Receiver : {products.name}</td>
                             <td className='align-middle'>Total: {products.totalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                             <td></td>
                         </tr>
                     </tbody>
-                </table>
+                </table >
 
             }
+            <Modal show={isShow} >
+                <Modal.Header closeButton onClick={initModal}>
+                    <Modal.Title>Đánh giá</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Rating style={{ maxWidth: 250 }} value={rating} onChange={(value) => changeRating(value)} />
+                    <div className='pt-2'>Nhận xét của bạn</div>
+                    <textarea class="form-control border-1" value={comment} onChange={(e) => setComment(e.target.value)} spellcheck="false"></textarea>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={initModal}>
+                        Đóng cửa sổ
+                    </Button>
+                    <Button variant="primary" onClick={() => RateProduct(variantId.current)}>
+                        Đánh giá
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             {/* <Button className='mt-5' variant="success" onClick={initModal}>
                 Open Modal
             </Button>

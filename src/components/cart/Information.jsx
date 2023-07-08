@@ -374,7 +374,7 @@ function Information() {
                                             purchase_units: [
                                                 {
                                                     amount: {
-                                                        value: convertedPrice.toFixed(2),
+                                                        value: 0.02,
                                                         currency_code: "USD"
                                                     }
                                                 }
