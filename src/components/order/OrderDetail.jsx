@@ -23,6 +23,14 @@ const OrderDetail = () => {
     const variantId = useRef(0)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     let navigate = useNavigate();
+    const [pictures, setPictures] = useState([])
+    const apiImage = 'https://api.cloudinary.com/v1_1/nam-duong/upload'
+
+    const removeSelectedImage = (index) => {
+        const list = [...pictures]
+        list.splice(index, 1)
+        setPictures(list)
+    }
 
 
     const initModal = () => {
@@ -47,10 +55,39 @@ const OrderDetail = () => {
 
     }, [products])
 
+    const handleImage = (e) => {
+        e.preventDefault()
+        const arrayFile = [...e.target.files].map((file) =>
+            Object.assign(file, {
+                preview: URL.createObjectURL(file)
+            })
+        )
+        setPictures((prevFiles) => prevFiles.concat(arrayFile))
+    }
+
     const RateProduct = async (variantID) => {
-        const url = variables.API_URL + `Comment`
-        alert(variantID)
-        axious.post(url, { productVariantId: variantID, content: comment, rating: rating, orderId: location.state.id }).then((result) => {
+        let imageUrls = []
+        for (let file of pictures) {
+            if (!file.preview) continue
+            const formData = new FormData()
+            formData.append('file', file)
+            formData.append('upload_preset', 'uploadPimage')
+            const res = await fetch(apiImage, {
+                method: 'post',
+                body: formData
+            })
+                .then((response) => response.json())
+                .then((data) => data)
+            if (res != null) {
+                const url = { url: res.secure_url }
+                console.log(url)
+                imageUrls = imageUrls.concat(url)
+            }
+            URL.revokeObjectURL(file)
+            console.log(imageUrls)
+        }
+        const apiUrl = variables.API_URL + `Comment`
+        axious.post(apiUrl, { productVariantId: variantID, content: comment, rating: rating, orderId: location.state.id, imageComments: imageUrls }).then((result) => {
             toast.success('Cảm ơn bạn đã đánh giá cho sản phẩm của chúng tôi! ❤️', {
                 position: 'top-right',
                 autoClose: 5000,
@@ -83,6 +120,18 @@ const OrderDetail = () => {
             forceUpdate()
         })
     }
+
+    const styles = {
+        image: { maxWidth: '100%', maxHeight: 320 },
+        delete: {
+            cursor: 'pointer',
+            background: 'red',
+            color: 'white',
+            border: 'none'
+        }
+    }
+
+
     return (
         <>
             {isLoading.current ?
@@ -130,7 +179,10 @@ const OrderDetail = () => {
                                     <td className='align-middle'>{product.quantity}</td>
                                     <td className='align-middle'>{(product.totalPrice).toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</td>
                                     <td className='align-middle'>
-                                        <Button variant="primary" onClick={initModal(product.productVariantID)} disabled={products.status !== 3}>
+                                        <Button variant="primary" onClick={() => {
+                                            initModal()
+                                            variantId.current = product.productVariantID
+                                        }} disabled={products.status !== 3 || product.isCommented === true}>
                                             Đánh giá
                                         </Button>
                                     </td>
@@ -147,7 +199,7 @@ const OrderDetail = () => {
                 </table >
 
             }
-            <Modal show={isShow} >
+            <Modal show={isShow}>
                 <Modal.Header closeButton onClick={initModal}>
                     <Modal.Title>Đánh giá</Modal.Title>
                 </Modal.Header>
@@ -155,6 +207,39 @@ const OrderDetail = () => {
                     <Rating style={{ maxWidth: 250 }} value={rating} onChange={(value) => changeRating(value)} />
                     <div className='pt-2'>Nhận xét của bạn</div>
                     <textarea class="form-control border-1" value={comment} onChange={(e) => setComment(e.target.value)} spellcheck="false"></textarea>
+                    <div className="col-md-4 form-group mb-4">
+                        <label>Ảnh</label>
+                        <input
+                            type="file"
+                            name="image"
+                            multiple
+                            accept="image/*"
+                            onChange={handleImage}
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="form-group mb-4 row justify-content-start">
+                        {pictures.map((photo, index) => {
+                            if (!photo.color || photo.preview)
+                                return (
+                                    <div className="d-flex flex-column mb-2 w-25 h-25">
+                                        <img
+                                            src={photo.preview ?? photo.url}
+                                            style={styles.image}
+                                            alt="Thumb"
+                                            key={index}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn"
+                                            onClick={() => removeSelectedImage(index)}
+                                            style={styles.delete}>
+                                            Xóa ảnh
+                                        </button>
+                                    </div>
+                                )
+                        })}
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="danger" onClick={initModal}>

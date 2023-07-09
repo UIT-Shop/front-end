@@ -13,6 +13,9 @@ import ImageGallery from 'react-image-gallery';
 import Moment from 'moment';
 import { Card } from 'react-bootstrap';
 import { Accordion } from 'react-bootstrap'
+import './Detail.css'
+import Chart from 'chart.js';
+import ReviewChart from '../components/product/ReviewChart';
 
 const Detail = () => {
     Moment.locale('vi');
@@ -40,6 +43,7 @@ const Detail = () => {
     const avgRating = useRef(0)
     const [isSaling, setIsSaling] = useState(false)
     const [salingVariant, setSalingVariant] = useState({})
+    const [summaryData, setSummarydata] = useState([])
 
 
     const pageComponent = () => {
@@ -185,15 +189,45 @@ const Detail = () => {
         axious.get(url).then((result) => {
             console.log("rating", result.data)
             listRating.current = result.data.data.comments
-            isLoading.current = false
-            isLoadingRating.current = false
             pageNumber.current = result.data.data.pages
+            FetchRatingSummary(productID)
             setPage(page)
             forceUpdate()
         }).catch((error) => {
             alert(error)
             isLoading.current = false
-            isLoadingRating.current = true
+            isLoadingRating.current = false
+        })
+    }
+
+    const FetchRatingSummary = async (productID) => {
+        isLoadingRating.current = true
+        forceUpdate()
+        const url = variables.API_URL + `Product/ratingSummary/${productID}`
+        axious.get(url).then((result) => {
+            console.log("rating summary", result.data)
+            const desiredRatings = [5, 4, 3, 2, 1];
+            const SummaryData = result.data.data
+            const newData = desiredRatings.map(rating => {
+                const existingData = SummaryData.find(item => item.rating === rating);
+                if (existingData) {
+                    return existingData;
+                } else {
+                    return {
+                        rating: rating,
+                        quantity: 0
+                    };
+                }
+            });
+            setSummarydata(newData)
+            console.log(newData)
+            isLoading.current = false
+            isLoadingRating.current = false
+            forceUpdate()
+        }).catch((error) => {
+            alert(error)
+            isLoading.current = false
+            isLoadingRating.current = false
         })
     }
     const addCart = async () => {
@@ -280,6 +314,16 @@ const Detail = () => {
     const unColorClicked = (image) => {
         currentImage.current = image
         forceUpdate()
+    }
+
+    const styles = {
+        image: { maxWidth: '100%', maxHeight: 320 },
+        delete: {
+            cursor: 'pointer',
+            background: 'red',
+            color: 'white',
+            border: 'none'
+        }
     }
 
 
@@ -426,39 +470,55 @@ const Detail = () => {
                                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
                             />
                         </div> :
-                            <div className='p-4'>
+                            <div className='p-4 row'>
+                                <ReviewChart reviews={summaryData} className='col w-50' />
 
-                                {listRating.current.map((rating) =>
-                                    <Card className='m-4'>
-                                        <Card.Body>
-                                            <div className="small-container">
-                                                <h3>{rating.userName}</h3>
-                                                <div className="rating">
-                                                    {
-                                                        [...Array(rating.rating)].map((elementInArray, index) => (
-                                                            <i className="fa fa-star"></i>
-                                                        )
-                                                        )
-                                                    }
-                                                    {
 
-                                                        [...Array(5 - rating.rating)].map((elementInArray, index) => (
-                                                            <i className="fa fa-star-o"></i>
-                                                        )
-                                                        )
-                                                    }
+                                <div className='col'>
+                                    {listRating.current.map((rating) =>
+                                        <Card className='m-4'>
+                                            <Card.Body>
+                                                <div className="small-container">
+                                                    <h3>{rating.userName}</h3>
+                                                    <div className="rating">
+                                                        {
+                                                            [...Array(rating.rating)].map((elementInArray, index) => (
+                                                                <i className="fa fa-star"></i>
+                                                            )
+                                                            )
+                                                        }
+                                                        {
 
+                                                            [...Array(5 - rating.rating)].map((elementInArray, index) => (
+                                                                <i className="fa fa-star-o"></i>
+                                                            )
+                                                            )
+                                                        }
+
+                                                    </div>
+                                                    <p>{Moment(rating.commentDate).format('HH:mm:ss - DD/MM/yyyy')} | Màu sắc: {rating.productColor} | Kích cỡ: {rating.productSize}</p>
+                                                    <h5>{rating.content === "" ? "Không có nội dung" : rating.content}</h5>
+                                                    <div className="form-group row justify-content-start img-magnifier-container">
+                                                        {rating.imageComments.map((image, index) => {
+                                                            return <div className="d-flex flex-column mb-2 w-25">
+                                                                <img
+                                                                    src={image.url}
+                                                                    style={styles.image}
+                                                                    alt="Thumb"
+                                                                    key={index}
+                                                                />
+                                                            </div>
+                                                        })}
+                                                    </div>
                                                 </div>
-                                                <p>{Moment(rating.commentDate).format('HH:mm:ss - DD/MM/yyyy')}</p>
-                                                <h5>{rating.content === "" ? "Không có nội dung" : rating.content}</h5>
-                                            </div>
-                                            <br />
-                                        </Card.Body>
-                                    </Card>
-                                )}
-                                <div className='my-5'>
-                                    {pageComponent()}
+                                                <br />
+                                            </Card.Body>
+                                        </Card>
+                                    )}
+                                    <div className='my-5'>
+                                        {pageComponent()}
 
+                                    </div>
                                 </div>
 
                             </div>
