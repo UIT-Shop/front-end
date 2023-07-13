@@ -88,6 +88,7 @@ const OrderDetail = () => {
         }
         const apiUrl = variables.API_URL + `Comment`
         axious.post(apiUrl, { productVariantId: variantID, content: comment, rating: rating, orderId: location.state.id, imageComments: imageUrls }).then((result) => {
+
             toast.success('Cảm ơn bạn đã đánh giá cho sản phẩm của chúng tôi! ❤️', {
                 position: 'top-right',
                 autoClose: 5000,
@@ -98,9 +99,11 @@ const OrderDetail = () => {
                 progress: undefined,
                 theme: 'colored',
             });
-
-
             initModal()
+            alert('Cảm ơn bạn đã đánh giá cho sản phẩm của chúng tôi! ❤️')
+            FetchOrder(location.state.id)
+
+
         }).catch((error) => {
             alert(error)
         })

@@ -13,17 +13,17 @@ import 'swiper/css/navigation';
 // import required modules
 import { Navigation } from 'swiper/modules';
 
-const RecommendProduct = () => {
+const Topsale = () => {
 
     const [products, setProducts] = useState([])
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const isLoading = useRef(false)
-    const FetchRecommendation = async () => {
+    const FetchTopSale = async () => {
         isLoading.current = true
         forceUpdate()
 
         let productsArray = {};
-        const url = variables.API_URL + `Product/recommend`
+        const url = variables.API_URL + `Product/topSale`
         axious.get(url).then((result) => {
             productsArray = result.data['data'].filter(d => d.images.length > 0 && d.variants.length > 0)
             // var parsedData = productsArray.map(el => 
@@ -36,10 +36,7 @@ const RecommendProduct = () => {
         })
     }
     useEffect(() => {
-        window.scrollTo(0, 0)
-        if (localStorage.getItem("JWT") != null) {
-            FetchRecommendation()
-        }
+        FetchTopSale()
     }, [])
     useEffect(() => {
         isLoading.current = false
@@ -68,11 +65,7 @@ const RecommendProduct = () => {
 
                 :
                 <div className="small-container p-4">
-                    {
-                        localStorage.getItem("JWT") != null ?
-                            <h2 className='pt-5'>Gợi ý dành cho bạn</h2>
-                            : <div></div>
-                    }
+                    <h2 className='pt-5'>Các sản phẩm đang bán chạy 🔥</h2>
                     <Swiper
                         slidesPerView={4}
                         spaceBetween={30}
@@ -101,4 +94,4 @@ const RecommendProduct = () => {
     )
 }
 
-export default RecommendProduct
+export default Topsale;

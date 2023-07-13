@@ -1,6 +1,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useRef, useReducer } from 'react'
 import Carousel from 'react-bootstrap/Carousel';
 import 'react-slideshow-image/dist/styles.css'
@@ -44,6 +44,8 @@ const Detail = () => {
     const [isSaling, setIsSaling] = useState(false)
     const [salingVariant, setSalingVariant] = useState({})
     const [summaryData, setSummarydata] = useState([])
+    const { id } = useParams();
+
 
 
     const pageComponent = () => {
@@ -157,6 +159,10 @@ const Detail = () => {
             console.log(location.state)
             FetchProduct(location.state.id)
             // console.log(data)
+        }
+        else {
+            console.log(id)
+            FetchProduct(id)
         }
     }, [])
 
@@ -342,6 +348,7 @@ const Detail = () => {
                 />
             </div> :
                 <div>
+
                     <ToastContainer />
                     <div className="small-container single-product">
                         <div className="row">
@@ -470,11 +477,11 @@ const Detail = () => {
                                 colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
                             />
                         </div> :
-                            <div className='p-4 row'>
-                                <ReviewChart reviews={summaryData} className='col w-50' />
+                            <div className='p-4 row align-items-start'>
 
 
-                                <div className='col'>
+
+                                <div className='col w-50'>
                                     {listRating.current.map((rating) =>
                                         <Card className='m-4'>
                                             <Card.Body>
@@ -497,7 +504,7 @@ const Detail = () => {
 
                                                     </div>
                                                     <p>{Moment(rating.commentDate).format('HH:mm:ss - DD/MM/yyyy')} | Màu sắc: {rating.productColor} | Kích cỡ: {rating.productSize}</p>
-                                                    <h5>{rating.content === "" ? "Không có nội dung" : rating.content}</h5>
+                                                    <h4 style={{ textTransform: 'none' }}>{rating.content === "" ? "Không có nội dung" : rating.content}</h4>
                                                     <div className="form-group row justify-content-start img-magnifier-container">
                                                         {rating.imageComments.map((image, index) => {
                                                             return <div className="d-flex flex-column mb-2 w-25">
@@ -521,6 +528,9 @@ const Detail = () => {
                                     </div>
                                 </div>
 
+                                <div className='col w-50'>
+                                    <ReviewChart reviews={summaryData} />
+                                </div>
                             </div>
 
                     }

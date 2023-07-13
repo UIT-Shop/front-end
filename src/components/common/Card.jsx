@@ -47,67 +47,67 @@ const Card = (props) => {
     }
     return (
         imageError ? null :
-            <div class="col-lg-4 col-md-12 mb-4 p-3">
-                <div class="card">
-                    <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
-                        data-mdb-ripple-color="light">
-                        <img src={getImgURL(props.product.images)} alt="" onError={handleImageError}
-                            class="w-100" />
-                        <a href="#!">
-                            <div class="mask">
-                                <div class="d-flex justify-content-start align-items-end h-100">
-                                    <h5><span class="badge bg-primary ms-2">New</span></h5>
-                                </div>
+
+            <div class="card">
+                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                    data-mdb-ripple-color="light">
+                    <img src={getImgURL(props.product.images)} alt="" onError={handleImageError}
+                        class="w-100" />
+                    {/* <a href="#!">
+                        <div class="mask">
+                            <div class="d-flex justify-content-start align-items-end h-100">
+                                <h5><span class="badge bg-primary ms-2">New</span></h5>
                             </div>
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <Link to={`/product/detail/${props.product.id}`} state={props.product}>
-                            <a href="" className="text-reset">
-                                <h5 className="card-title mb-3 title">{props.product.title}</h5>
-                            </a>
-                        </Link>
-                        <a></a>
-
-                        <a href="" className="text-reset">
-                            {
-                                <p style={{ marginBottom: 0 }}>{props.product.category.name}</p>
-                            }
-                        </a>
-                        <div className="rating">
-                            {
-                                [...Array(rating)].map(() => (
-                                    <i className="fa fa-star"></i>
-                                ))
-                            }
-                            {
-                                [...Array(5 - rating)].map(() => (
-                                    <i className="fa fa-star-o"></i>
-                                )
-                                )
-
-                            }
-                            {"\t" + Number((props.product.rating)).toFixed(1) + "/5"}
-
-                            {
-                                isSaling ?
-                                    <div class="mb-3" style={{ height: '2em' }}>
-                                        <h4 style={{ color: "red" }}>{salingVariant.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
-                                        <del >{salingVariant.originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</del>
-                                    </div>
-                                    :
-                                    <div class="mb-3" style={{ height: '2em' }}>
-                                        <h4 class="mb-3"  >{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
-
-                                    </div>
-
-                            }
                         </div>
+                    </a> */}
+                </div>
+                <div class="card-body">
+                    <Link to={`/product/detail/${props.product.id}`} state={props.product}>
+                        <a href="" className="text-reset">
+                            <h5 className="card-title mb-3 title">{props.product.title}</h5>
+                        </a>
+                    </Link>
+                    <a></a>
 
+                    <a href="" className="text-reset">
+                        {
+                            <p style={{ marginBottom: 0 }}>{props.product.category.name}</p>
+                        }
+                    </a>
+                    <div className="rating">
+                        {
+                            [...Array(rating)].map(() => (
+                                <i className="fa fa-star"></i>
+                            ))
+                        }
+                        {
+                            [...Array(5 - rating)].map(() => (
+                                <i className="fa fa-star-o"></i>
+                            )
+                            )
 
+                        }
+                        {"\t" + Number((props.product.rating)).toFixed(1) + "/5"}
+
+                        {
+                            isSaling ?
+                                <div class="mb-3" style={{ height: '2em' }}>
+                                    <h4 style={{ color: "red" }}>{salingVariant.price.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
+                                    <del >{salingVariant.originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</del>
+                                </div>
+                                :
+                                <div class="mb-3" style={{ height: '2em' }}>
+                                    <h4 class="mb-3"  >{props.product.variants[0].originalPrice.toLocaleString('it-IT', { style: 'currency', currency: 'VND' })}</h4>
+
+                                </div>
+
+                        }
                     </div>
+
+
                 </div>
             </div>
+
     )
 }
 

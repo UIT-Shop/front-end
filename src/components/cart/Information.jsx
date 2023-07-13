@@ -156,7 +156,7 @@ function Information() {
         }
         if (selectedOption === 'cash') {
             const url = variables.API_URL + `Order`
-            axious.post(url, { wardId: ward.id, street: street, name: name, phone: phoneNumber }).then((result) => {
+            axious.post(url, { wardId: ward.id, street: street, name: name, phone: phoneNumber, isPaid: false }).then((result) => {
                 toast.success('Cảm ơn bạn đã đặt hàng!', {
                     position: 'top-right',
                     autoClose: 5000,
@@ -326,6 +326,7 @@ function Information() {
                                             value="cash"
                                             checked={selectedOption === 'cash'}
                                             onChange={handleOptionChange}
+                                            style={{ width: 'auto' }}
                                         />
                                         <label className="form-check-label">
                                             Thanh toán trực tiếp
@@ -374,7 +375,7 @@ function Information() {
                                             purchase_units: [
                                                 {
                                                     amount: {
-                                                        value: 0.02,
+                                                        value: convertedPrice.toFixed(2),
                                                         currency_code: "USD"
                                                     }
                                                 }
@@ -383,9 +384,30 @@ function Information() {
                                     }}
                                     onApprove={(data, actions) => {
                                         return actions.order.capture().then((details) => {
-                                            const name = details.payer.name.given_name;
-                                            alert(`Transaction completed by ${name}`);
+                                            const url = variables.API_URL + `Order`
+                                            axious.post(url, { wardId: ward.id, street: street, name: name, phone: phoneNumber, isPaid: true }).then((result) => {
+                                                toast.success('Cảm ơn bạn đã đặt hàng!', {
+                                                    position: 'top-right',
+                                                    autoClose: 5000,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    theme: 'colored',
+                                                });
+                                                initModalPayment()
+                                                initModal()
+                                                window.scrollTo(0, 0)
+
+
+                                            }).catch((error) => {
+                                                alert(error)
+                                            })
                                         });
+                                    }}
+                                    onError={(error) => {
+                                        alert(error)
                                     }} />
                             </PayPalScriptProvider>
                         </Modal.Body>

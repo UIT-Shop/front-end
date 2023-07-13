@@ -33,8 +33,6 @@ const Account = () => {
             if (result.data.data === null)
                 throw result.data.message
             localStorage.setItem("JWT", result.data['data']);
-
-            alert("Đăng nhập thành công")
             navigate('/')
             navigate(0)
 
@@ -70,7 +68,6 @@ const Account = () => {
             }
             axious.post(urlLogin, Logindata).then((resultLogin) => {
                 localStorage.setItem("JWT", resultLogin.data['data']);
-                alert("Đăng ký thành công!")
                 axious.defaults.headers.post['Content-Type'] = 'application/json';
                 axious.defaults.headers.post['Accept'] = 'application/json';
                 axious.interceptors.request.use(function (config) {
@@ -80,10 +77,12 @@ const Account = () => {
                     return config;
                 });
                 navigate('/')
+                navigate(0)
 
             })
         })
             .catch((error) => {
+                console.log(error)
             })
     }
 
@@ -222,9 +221,9 @@ const Account = () => {
                                                 <div class="d-grid gap-2 mt-2">
                                                     <button className='btn' onClick={e => showForm(1, e)}>Đăng nhập</button>
                                                 </div>
-                                                <div class="d-grid gap-2 mt-2">
+                                                {/* <div class="d-grid gap-2 mt-2">
                                                     <button className='btn'>Quên mật khẩu</button>
-                                                </div>
+                                                </div> */}
                                             </form>
                                         </div>
                                     </div>

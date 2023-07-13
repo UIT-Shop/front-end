@@ -17,7 +17,7 @@ const Cart = () => {
     const isLoading = useRef(true)
     const productLoaded = useRef(false)
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-
+    const hasChangedQuantity = useRef(false)
     useEffect(() => {
         window.scrollTo(0, 0)
         getVariants()
@@ -48,19 +48,12 @@ const Cart = () => {
             isLoading.current = false
             forceUpdate()
         }
-
-
-
-
         // data = categories['data']
-
-
     }, [products])
 
     const changeQuantity = async (variantID, quantity) => {
-
-
         isLoading.current = true
+        hasChangedQuantity.current = true
         forceUpdate()
         const url = variables.API_URL + `Cart/update-quantity`
         axious.put(url, { productVariantId: variantID, quantity: quantity }).then((result) => {

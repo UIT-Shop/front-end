@@ -1,3 +1,13 @@
-.container-2 {
-    background: radial-gradient(#fff, #ffd6d6);
+h2.caption-title {
+    text-transform: none;
+    font-size: 2em;
+    text-shadow: 0 2px 2px rgba(27, 27, 27, 0.3);
+    color: white;
+}
+
+p.intro-name {
+    color: white;
+    text-shadow: 0 2px 2px rgba(27, 27, 27, 0.3);
+    font-size: 1.5em;
+    font-weight: 500;
 }

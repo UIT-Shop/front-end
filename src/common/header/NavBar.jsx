@@ -48,7 +48,7 @@ const NavBar = () => {
         if (localStorage.getItem("JWT") != null) {
             setAuth(true)
         }
-        FetchCategory()
+        // FetchCategory()
 
     }, [])
 

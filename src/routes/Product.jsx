@@ -166,8 +166,9 @@ const Product = () => {
         let url = ''
         console.log(isSearching.current)
         isSearching.current ?
-            url = variables.API_URL + `Product/search/${param}/${page}` :
+            url = variables.API_URL + `Product/search/${param}/${page}/1` :
             url = variables.API_URL + `Product/Category/${param}?page=${page}`
+        console.log(url)
         axious.get(url).then((result) => {
             console.log(result)
             productsArray = result.data['data'].products
@@ -320,9 +321,14 @@ const Product = () => {
                                                 {
                                                     products.map((product) =>
                                                         isSearching.current ?
-                                                            <Card product={product} />
+                                                            <div className='col-lg-4 col-md-12 mb-4 p-3'>
+                                                                <Card product={product} />
+                                                            </div>
                                                             :
-                                                            <Card product={product} category={currentCategory} />
+                                                            <div className='col-lg-4 col-md-12 mb-4 p-3'>
+                                                                <Card product={product} category={currentCategory} />
+
+                                                            </div>
 
                                                         // <div class="col-lg-4 col-md-12 mb-4">
                                                         //     <div class="card">
